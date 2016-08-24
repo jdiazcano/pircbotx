@@ -1,30 +1,29 @@
 /**
  * Copyright (C) 2010-2014 Leon Blakey <lord.quackstar at gmail.com>
- *
+ * <p>
  * This file is part of PircBotX.
- *
+ * <p>
  * PircBotX is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * PircBotX is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * PircBotX. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.pircbotx.hooks.events;
 
 import com.google.common.collect.ImmutableList;
-import javax.annotation.Nullable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.ReplyConstants;
+import org.pircbotx.hooks.Event;
 
 /**
  * This is called when we receive a numeric response from the IRC server.
@@ -51,33 +50,33 @@ import org.pircbotx.ReplyConstants;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ServerResponseEvent extends Event {
-	/**
-	 * The three-digit numerical code for the response.
-	 */
-	protected final int code;
-	/**
-	 * The raw line of the response
-	 */
-	protected final String rawLine;
-	/**
-	 * Parsed raw line.
-	 */
-	protected final ImmutableList<String> parsedResponse;
+    /**
+     * The three-digit numerical code for the response.
+     */
+    protected final int code;
+    /**
+     * The raw line of the response
+     */
+    protected final String rawLine;
+    /**
+     * Parsed raw line.
+     */
+    protected final ImmutableList<String> parsedResponse;
 
-	public ServerResponseEvent(PircBotX bot, int code, @NonNull String rawLine, @NonNull ImmutableList<String> parsedResponse) {
-		super(bot);
-		this.code = code;
-		this.rawLine = rawLine;
-		this.parsedResponse = parsedResponse;
-	}
+    public ServerResponseEvent(PircBotX bot, int code, @NonNull String rawLine, @NonNull ImmutableList<String> parsedResponse) {
+        super(bot);
+        this.code = code;
+        this.rawLine = rawLine;
+        this.parsedResponse = parsedResponse;
+    }
 
-	/**
-	 * Respond with a <i>raw line</i> to the server
-	 *
-	 * @param response The response to send
-	 */
-	@Override
-	public void respond(String response) {
-		getBot().sendRaw().rawLine(response);
-	}
+    /**
+     * Respond with a <i>raw line</i> to the server
+     *
+     * @param response The response to send
+     */
+    @Override
+    public void respond(String response) {
+        getBot().sendRaw().rawLine(response);
+    }
 }

@@ -1,32 +1,32 @@
 /**
  * Copyright (C) 2010-2014 Leon Blakey <lord.quackstar at gmail.com>
- *
+ * <p>
  * This file is part of PircBotX.
- *
+ * <p>
  * PircBotX is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * PircBotX is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * PircBotX. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.pircbotx.hooks.managers;
 
 import com.google.common.collect.ImmutableSet;
+import lombok.extern.slf4j.Slf4j;
+import org.pircbotx.PircBotX;
+import org.pircbotx.hooks.Event;
+import org.pircbotx.hooks.Listener;
+import org.pircbotx.hooks.WaitForQueue;
+
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
-import org.pircbotx.hooks.Event;
-import org.pircbotx.hooks.Listener;
-import org.pircbotx.PircBotX;
-import org.pircbotx.Utils;
-import org.pircbotx.hooks.WaitForQueue;
 
 /**
  * Generic ListenerManager based off of a normal event system. This is backed by
@@ -48,41 +48,41 @@ import org.pircbotx.hooks.WaitForQueue;
 @Deprecated
 @Slf4j
 public class GenericListenerManager extends AbstractListenerManager {
-	protected Set<Listener> listeners = new HashSet<Listener>();
-	protected ImmutableSet<Listener> listenersImmutable = ImmutableSet.copyOf(listeners);
+    protected Set<Listener> listeners = new HashSet<Listener>();
+    protected ImmutableSet<Listener> listenersImmutable = ImmutableSet.copyOf(listeners);
 
-	public void addListener(Listener listener) {
-		listeners.add(listener);
-		rebuildListeners();
-	}
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+        rebuildListeners();
+    }
 
-	public boolean removeListener(Listener listener) {
-		boolean result = listeners.remove(listener);
-		rebuildListeners();
-		return result;
-	}
+    public boolean removeListener(Listener listener) {
+        boolean result = listeners.remove(listener);
+        rebuildListeners();
+        return result;
+    }
 
-	public ImmutableSet<Listener> getListeners() {
-		return listenersImmutable;
-	}
+    public ImmutableSet<Listener> getListeners() {
+        return listenersImmutable;
+    }
 
-	@Override
-	public void onEvent(Event event) {
-		super.onEvent(event);
-		for (Listener curListener : listenersImmutable) {
-			executeListener(curListener, event);
-		}
-	}
+    @Override
+    public void onEvent(Event event) {
+        super.onEvent(event);
+        for (Listener curListener : listenersImmutable) {
+            executeListener(curListener, event);
+        }
+    }
 
-	public boolean listenerExists(Listener listener) {
-		return listenersImmutable.contains(listener);
-	}
+    public boolean listenerExists(Listener listener) {
+        return listenersImmutable.contains(listener);
+    }
 
-	public void shutdown(PircBotX bot) {
-		//Do nothing since dispatching an event executes all listeners immediately
-	}
+    public void shutdown(PircBotX bot) {
+        //Do nothing since dispatching an event executes all listeners immediately
+    }
 
-	protected void rebuildListeners() {
-		listenersImmutable = ImmutableSet.copyOf(listeners);
-	}
+    protected void rebuildListeners() {
+        listenersImmutable = ImmutableSet.copyOf(listeners);
+    }
 }

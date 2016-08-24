@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2010-2014 Leon Blakey <lord.quackstar at gmail.com>
- *
+ * <p>
  * This file is part of PircBotX.
- *
+ * <p>
  * PircBotX is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * PircBotX is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * PircBotX. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -35,59 +35,59 @@ import org.pircbotx.exception.CAPException;
 @RequiredArgsConstructor
 @ToString
 public class EnableCapHandler implements CapHandler {
-	@Getter
-	protected final String cap;
-	protected final boolean ignoreFail;
+    @Getter
+    protected final String cap;
+    protected final boolean ignoreFail;
 
-	/**
-	 * Create EnableCapHandler not ignoring if server doesn't support the
-	 * requested capability
-	 */
-	public EnableCapHandler(String cap) {
-		this.cap = cap;
-		this.ignoreFail = false;
-	}
+    /**
+     * Create EnableCapHandler not ignoring if server doesn't support the
+     * requested capability
+     */
+    public EnableCapHandler(String cap) {
+        this.cap = cap;
+        this.ignoreFail = false;
+    }
 
-	@Override
-	public boolean handleLS(PircBotX bot, ImmutableList<String> capabilities) throws CAPException {
-		if (capabilities.contains(cap)) {
-			//Server supports capability, send request to use it
-			log.debug("Supported capability " + cap);
-			bot.sendCAP().request(cap);
-			//Need to wait for server ACK
-			return false;
-		} else if (!ignoreFail)
-			throw new CAPException(CAPException.Reason.UnsupportedCapability, cap);
-		else {
-			//Server doesn't support capability but were ignoring exceptions
-			log.debug("Unsupported capability " + cap);
-			return true;
-		}
-	}
+    @Override
+    public boolean handleLS(PircBotX bot, ImmutableList<String> capabilities) throws CAPException {
+        if (capabilities.contains(cap)) {
+            //Server supports capability, send request to use it
+            log.debug("Supported capability " + cap);
+            bot.sendCAP().request(cap);
+            //Need to wait for server ACK
+            return false;
+        } else if (!ignoreFail)
+            throw new CAPException(CAPException.Reason.UnsupportedCapability, cap);
+        else {
+            //Server doesn't support capability but were ignoring exceptions
+            log.debug("Unsupported capability " + cap);
+            return true;
+        }
+    }
 
-	@Override
-	public boolean handleACK(PircBotX bot, ImmutableList<String> capabilities) throws CAPException {
-		//Finished if the server is acknowledging the capability
-		return capabilities.contains(cap);
-	}
+    @Override
+    public boolean handleACK(PircBotX bot, ImmutableList<String> capabilities) throws CAPException {
+        //Finished if the server is acknowledging the capability
+        return capabilities.contains(cap);
+    }
 
-	@Override
-	public boolean handleNAK(PircBotX bot, ImmutableList<String> capabilities) throws CAPException {
-		if (capabilities.contains(cap)) {
-			//Make sure the bot didn't register this capability
-			bot.getEnabledCapabilities().remove(cap);
-			if (!ignoreFail)
-				throw new CAPException(CAPException.Reason.UnsupportedCapability, cap);
-			else
-				//Nothing more to do
-				return true;
-		}
-		//Not applicable to us
-		return false;
-	}
+    @Override
+    public boolean handleNAK(PircBotX bot, ImmutableList<String> capabilities) throws CAPException {
+        if (capabilities.contains(cap)) {
+            //Make sure the bot didn't register this capability
+            bot.getEnabledCapabilities().remove(cap);
+            if (!ignoreFail)
+                throw new CAPException(CAPException.Reason.UnsupportedCapability, cap);
+            else
+                //Nothing more to do
+                return true;
+        }
+        //Not applicable to us
+        return false;
+    }
 
-	@Override
-	public boolean handleUnknown(PircBotX bot, String rawLine) {
-		return false;
-	}
+    @Override
+    public boolean handleUnknown(PircBotX bot, String rawLine) {
+        return false;
+    }
 }

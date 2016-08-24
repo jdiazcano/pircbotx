@@ -1,36 +1,37 @@
 /**
  * Copyright (C) 2010-2014 Leon Blakey <lord.quackstar at gmail.com>
- *
+ * <p>
  * This file is part of PircBotX.
- *
+ * <p>
  * PircBotX is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * PircBotX is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * PircBotX. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.pircbotx.hooks.events;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import javax.annotation.Nullable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import org.pircbotx.hooks.Event;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.pircbotx.UserHostmask;
 import org.pircbotx.dcc.ReceiveChat;
+import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.hooks.types.GenericDCCEvent;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * This event will be dispatched whenever a DCC Chat request is received. This
@@ -61,75 +62,75 @@ import org.pircbotx.hooks.types.GenericDCCEvent;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class IncomingChatRequestEvent extends Event implements GenericDCCEvent {
-	@Getter(onMethod = @_({
-		@Override,
-		@Nullable}))
-	protected final User user;
-	@Getter(onMethod = @_(
-			@Override))
-	protected final UserHostmask userHostmask;
-	@Getter(onMethod = @_(
-			@Override))
-	protected final InetAddress address;
-	@Getter(onMethod = @_(
-			@Override))
-	protected final int port;
-	@Getter(onMethod = @_(
-			@Override))
-	protected final String token;
-	@Getter(onMethod = @_(
-			@Override))
-	protected final boolean passive;
+    @Getter(onMethod = @_({
+            @Override,
+            @Nullable}))
+    protected final User user;
+    @Getter(onMethod = @_(
+            @Override))
+    protected final UserHostmask userHostmask;
+    @Getter(onMethod = @_(
+            @Override))
+    protected final InetAddress address;
+    @Getter(onMethod = @_(
+            @Override))
+    protected final int port;
+    @Getter(onMethod = @_(
+            @Override))
+    protected final String token;
+    @Getter(onMethod = @_(
+            @Override))
+    protected final boolean passive;
 
-	public IncomingChatRequestEvent(PircBotX bot, @NonNull UserHostmask userHostmask, User user, @NonNull InetAddress address, int port, String token, boolean passive) {
-		super(bot);
-		this.user = user;
-		this.userHostmask = userHostmask;
-		this.address = address;
-		this.port = port;
-		this.token = token;
-		this.passive = passive;
-	}
+    public IncomingChatRequestEvent(PircBotX bot, @NonNull UserHostmask userHostmask, User user, @NonNull InetAddress address, int port, String token, boolean passive) {
+        super(bot);
+        this.user = user;
+        this.userHostmask = userHostmask;
+        this.address = address;
+        this.port = port;
+        this.token = token;
+        this.passive = passive;
+    }
 
-	public ReceiveChat accept() throws IOException {
-		return getBot().getDccHandler().acceptChatRequest(this);
-	}
+    public ReceiveChat accept() throws IOException {
+        return getBot().getDccHandler().acceptChatRequest(this);
+    }
 
-	/**
-	 * @deprecated Use {@link #getAddress() } from {@link GenericDCCEvent}
-	 * interface
-	 */
-	@Deprecated
-	public InetAddress getChatAddress() {
-		return getAddress();
-	}
+    /**
+     * @deprecated Use {@link #getAddress() } from {@link GenericDCCEvent}
+     * interface
+     */
+    @Deprecated
+    public InetAddress getChatAddress() {
+        return getAddress();
+    }
 
-	/**
-	 * @deprecated Use {@link #getPort() } from {@link GenericDCCEvent}
-	 * interface
-	 */
-	@Deprecated
-	public int getChatPort() {
-		return getPort();
-	}
+    /**
+     * @deprecated Use {@link #getPort() } from {@link GenericDCCEvent}
+     * interface
+     */
+    @Deprecated
+    public int getChatPort() {
+        return getPort();
+    }
 
-	/**
-	 * @deprecated Use {@link #getToken() } from {@link GenericDCCEvent}
-	 * interface
-	 */
-	@Deprecated
-	public String getChatToken() {
-		return getToken();
-	}
+    /**
+     * @deprecated Use {@link #getToken() } from {@link GenericDCCEvent}
+     * interface
+     */
+    @Deprecated
+    public String getChatToken() {
+        return getToken();
+    }
 
-	/**
-	 * Respond with a <i>private message</i> to the user that sent the request,
-	 * <b>not a message over dcc</b> since it might not of been accepted yet
-	 *
-	 * @param response The response to send
-	 */
-	@Override
-	public void respond(String response) {
-		getUser().send().message(response);
-	}
+    /**
+     * Respond with a <i>private message</i> to the user that sent the request,
+     * <b>not a message over dcc</b> since it might not of been accepted yet
+     *
+     * @param response The response to send
+     */
+    @Override
+    public void respond(String response) {
+        getUser().send().message(response);
+    }
 }

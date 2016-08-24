@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2010-2014 Leon Blakey <lord.quackstar at gmail.com>
- *
+ * <p>
  * This file is part of PircBotX.
- *
+ * <p>
  * PircBotX is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * PircBotX is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * PircBotX. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,13 +19,14 @@ package org.pircbotx.hooks.managers;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.pircbotx.hooks.Event;
+import org.pircbotx.hooks.Listener;
+
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
-import org.pircbotx.hooks.Event;
-import org.pircbotx.hooks.Listener;
 
 /**
  * ThreadListenerManager with additional dedicated background threads. Normal
@@ -42,42 +43,42 @@ import org.pircbotx.hooks.Listener;
  * @author Leon Blakey
  */
 public class BackgroundListenerManager extends ThreadedListenerManager {
-	protected Map<Listener, ExecutorService> backgroundListeners = Maps.newHashMap();
-	protected final AtomicInteger backgroundCount = new AtomicInteger();
+    protected Map<Listener, ExecutorService> backgroundListeners = Maps.newHashMap();
+    protected final AtomicInteger backgroundCount = new AtomicInteger();
 
-	public void addListener(Listener listener, boolean isBackground) {
-		if (!isBackground)
-			super.addListener(listener);
-		else {
-			BasicThreadFactory factory = new BasicThreadFactory.Builder()
-					.namingPattern("backgroundPool" + managerNumber + "-backgroundThread" + backgroundCount.getAndIncrement() + "-%d")
-					.daemon(true)
-					.build();
-			backgroundListeners.put(listener, Executors.newSingleThreadExecutor(factory));
-		}
-	}
+    public void addListener(Listener listener, boolean isBackground) {
+        if (!isBackground)
+            super.addListener(listener);
+        else {
+            BasicThreadFactory factory = new BasicThreadFactory.Builder()
+                    .namingPattern("backgroundPool" + managerNumber + "-backgroundThread" + backgroundCount.getAndIncrement() + "-%d")
+                    .daemon(true)
+                    .build();
+            backgroundListeners.put(listener, Executors.newSingleThreadExecutor(factory));
+        }
+    }
 
-	@Override
-	public void onEvent(Event event) {
-		//Dispatch to both standard listeners and background listeners
-		super.onEvent(event);
-		for (Map.Entry<Listener, ExecutorService> curEntry : backgroundListeners.entrySet())
-			submitEvent(curEntry.getValue(), curEntry.getKey(), event);
-	}
+    @Override
+    public void onEvent(Event event) {
+        //Dispatch to both standard listeners and background listeners
+        super.onEvent(event);
+        for (Map.Entry<Listener, ExecutorService> curEntry : backgroundListeners.entrySet())
+            submitEvent(curEntry.getValue(), curEntry.getKey(), event);
+    }
 
-	@Override
-	public ImmutableSet<Listener> getListeners() {
-		return ImmutableSet.<Listener>builder()
-				.addAll(listeners)
-				.addAll(backgroundListeners.keySet())
-				.build();
-	}
+    @Override
+    public ImmutableSet<Listener> getListeners() {
+        return ImmutableSet.<Listener>builder()
+                .addAll(listeners)
+                .addAll(backgroundListeners.keySet())
+                .build();
+    }
 
-	@Override
-	public boolean removeListener(Listener listener) {
-		if (backgroundListeners.containsKey(listener))
-			return backgroundListeners.remove(listener) != null;
-		else
-			return super.removeListener(listener);
-	}
+    @Override
+    public boolean removeListener(Listener listener) {
+        if (backgroundListeners.containsKey(listener))
+            return backgroundListeners.remove(listener) != null;
+        else
+            return super.removeListener(listener);
+    }
 }

@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2010-2014 Leon Blakey <lord.quackstar at gmail.com>
- *
+ * <p>
  * This file is part of PircBotX.
- *
+ * <p>
  * PircBotX is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * PircBotX is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * PircBotX. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,31 +34,31 @@ import org.pircbotx.hooks.types.GenericChannelEvent;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class BanListEvent extends Event implements GenericChannelEvent {
-	@Getter(onMethod = @_(
-			@Override))
-	private final Channel channel;
-	private final ImmutableList<Entry> entries;
+    @Getter(onMethod = @_(
+            @Override))
+    private final Channel channel;
+    private final ImmutableList<Entry> entries;
 
-	public BanListEvent(PircBotX bot, Channel channel, ImmutableList<Entry> entries) {
-		super(bot);
-		this.channel = channel;
-		this.entries = entries;
-	}
+    public BanListEvent(PircBotX bot, Channel channel, ImmutableList<Entry> entries) {
+        super(bot);
+        this.channel = channel;
+        this.entries = entries;
+    }
 
-	/**
-	 * Send a message to the channel
-	 *
-	 * @param response
-	 */
-	@Override
-	public void respond(String response) {
-		channel.send().message(response);
-	}
+    /**
+     * Send a message to the channel
+     *
+     * @param response
+     */
+    @Override
+    public void respond(String response) {
+        channel.send().message(response);
+    }
 
-	@Data
-	public static class Entry {
-		private final UserHostmask recipient;
-		private final UserHostmask source;
-		private final long time;
-	}
+    @Data
+    public static class Entry {
+        private final UserHostmask recipient;
+        private final UserHostmask source;
+        private final long time;
+    }
 }
