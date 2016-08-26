@@ -442,7 +442,19 @@ public class InputParser implements Closeable {
         //Try to load the source user if it exists
         User sourceUser = bot.getUserChannelDao().containsUser(source) ? bot.getUserChannelDao().getUser(source) : null;
 
-        // Check for CTCP requests.
+        try {
+            if (configuration.getDynamicCommandHandler().handle(bot, command, sourceUser, channel, target, message, parsedLine, tags, line)) {
+                // The DynamicCommandHandler handled it and it has preference over it so we just forget about this
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("Ooops, something went wrong.");
+            System.out.println("Line: " + line);
+            System.out.println("Wasn't able to be parsed");
+            e.printStackTrace();
+        }
+
+            // Check for CTCP requests.
         if (command.equals("PRIVMSG") && message.startsWith("\u0001") && message.endsWith("\u0001")) {
             sourceUser = createUserIfNull(sourceUser, source);
             String request = message.substring(1, message.length() - 1);
@@ -588,9 +600,7 @@ public class InputParser implements Closeable {
                 sourceUser.setAwayMessage(parsedLine.get(0));
             }
         } else {
-            if (!configuration.getDynamicCommandHandler().handle(bot, command, line, tags)) {
-                configuration.getListenerManager().onEvent(new UnknownEvent(bot, line));
-            }
+            configuration.getListenerManager().onEvent(new UnknownEvent(bot, line));
         }
     }
 

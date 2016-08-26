@@ -3,42 +3,47 @@ package org.pircbotx.twitch.beans;
 import com.google.common.collect.ImmutableMap;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * Created by Javier on 25/08/2016.
  */
 @ToString
-public class ClearChatConfig {
-    private String line;
-    private String language;
-    private boolean r9k;
-    private int slow;
-    private boolean subsOnly;
+public class ClearChatConfig extends BaseConfig {
+    // https://github.com/justintv/Twitch-API/blob/master/IRC.md#clearchat-1
+    // Line example -> @ban-duration=1;ban-reason=Follow\sthe\srules :tmi.twitch.tv CLEARCHAT #channel :target_username
+    private String userName;
+    private int banDuration;
+    private String banReason;
 
-    public ClearChatConfig(String line, ImmutableMap<String, String> tags) {
-        this.line = line;
-        this.language = tags.get("broadcaster-lang");
-        this.r9k = tags.getOrDefault("r9k", "0").equals("1");
-        this.slow = Integer.parseInt(tags.getOrDefault("slow", "0"));
-        this.subsOnly = tags.getOrDefault("subs-only", "0").equals("1");
+    public ClearChatConfig(String message, List<String> parsedLine, ImmutableMap<String, String> tags, String line) {
+        super(message, parsedLine, line);
+        this.userName = line.substring(line.lastIndexOf(":") + 1);
+        this.banDuration = Integer.parseInt(tags.getOrDefault("ban-duration", "-1"));
+        this.banReason = tags.get("ban-reason");
     }
 
-    public String getLanguage() {
-        return language;
+    public String getUserName() {
+        return userName;
     }
 
-    public boolean isR9k() {
-        return r9k;
+    public boolean isChannel() {
+        return userName == null;
     }
 
-    public int isSlow() {
-        return slow;
+    public int getBanDuration() {
+        return banDuration;
     }
 
-    public boolean isSubsOnly() {
-        return subsOnly;
+    public String getBanReason() {
+        return banReason;
     }
 
-    public String getLine() {
-        return line;
+    public boolean isPermanentBan() {
+        return banReason != null && banDuration == -1;
+    }
+
+    public boolean isBan() {
+        return banReason != null;
     }
 }
