@@ -28,19 +28,19 @@ public interface GenericChannelUserOutput {
      *
      * @param action
      */
-    public void action(String action);
+    void action(String action);
 
     /**
      * Send a message to the represented user or channel.
      *
      * @param message
      */
-    public void message(String message);
+    void message(String message);
 
     /**
      * Send a notice to the represented user or channel.
      *
      * @param notice
      */
-    public void notice(String notice);
+    void notice(String notice);
 }

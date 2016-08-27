@@ -100,8 +100,9 @@ public class User extends UserHostmask {
             WaitForQueue waitForQueue = new WaitForQueue(getBot());
             while (true) {
                 WhoisEvent event = waitForQueue.waitFor(WhoisEvent.class);
-                if (!event.getNick().equals(getNick()))
+                if (!event.getNick().equals(getNick())) {
                     continue;
+                }
 
                 //Got our event
                 waitForQueue.close();

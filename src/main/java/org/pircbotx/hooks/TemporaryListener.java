@@ -42,8 +42,9 @@ public class TemporaryListener extends ListenerAdapter {
 
     @Override
     public void onEvent(Event event) throws Exception {
-        if (event.getBot() == bot)
+        if (event.getBot() == bot) {
             super.onEvent(event);
+        }
     }
 
     /**

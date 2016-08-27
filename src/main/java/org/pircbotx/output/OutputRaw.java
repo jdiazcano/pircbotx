@@ -113,7 +113,9 @@ public class OutputRaw {
             lastSentLine = System.nanoTime();
             if (resetDelay)
                 //Reset the
+            {
                 writeNowCondition.signalAll();
+            }
         } catch (IOException e) {
             throw new RuntimeException("IO exception when sending line to server, is the network still up? " + exceptionDebug(), e);
         } catch (Exception e) {

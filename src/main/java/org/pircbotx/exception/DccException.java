@@ -50,7 +50,7 @@ public class DccException extends RuntimeException {
         return reason + " from user " + user.getNick() + ": " + detail;
     }
 
-    public static enum Reason {
+    public enum Reason {
         UnknownFileTransferResume,
         ChatNotConnected,
         ChatCancelled,

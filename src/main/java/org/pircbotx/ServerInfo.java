@@ -53,7 +53,7 @@ public class ServerInfo {
     protected String serverVersion;
     protected String userModes;
     //005 information
-    protected LinkedHashMap<String, String> isupportRaw = new LinkedHashMap<String, String>();
+    protected LinkedHashMap<String, String> isupportRaw = new LinkedHashMap<>();
     protected String prefixes;
     protected String channelTypes;
     protected String channelModes;
@@ -113,10 +113,11 @@ public class ServerInfo {
 
     public void parse(int code, List<String> parsedLine) {
         //Pass off to speicific methods
-        if (code == 004)
+        if (code == 004) {
             parse004(parsedLine);
-        else if (code == 005)
+        } else if (code == 005) {
             parse005(parsedLine);
+        }
     }
 
     protected void parse004(List<String> parsedLine) {
@@ -134,23 +135,23 @@ public class ServerInfo {
             String key = itemParts[0];
             String value = (itemParts.length == 2) ? itemParts[1] : "";
             isupportRaw.put(key, value);
-            if (key.equalsIgnoreCase("PREFIX"))
+            if ("PREFIX".equalsIgnoreCase(key)) {
                 prefixes = value;
-            else if (key.equalsIgnoreCase("CHANTYPES"))
+            } else if ("CHANTYPES".equalsIgnoreCase(key)) {
                 channelTypes = value;
-            else if (key.equalsIgnoreCase("CHANMODES"))
+            } else if ("CHANMODES".equalsIgnoreCase(key)) {
                 channelModes = value;
-            else if (key.equalsIgnoreCase("MODES"))
+            } else if ("MODES".equalsIgnoreCase(key)) {
                 maxModes = tryParseInt("MODES", value);
-            else if (key.equalsIgnoreCase("MAXCHANNELS"))
+            } else if ("MAXCHANNELS".equalsIgnoreCase(key)) {
                 maxChannels = tryParseInt("MAXCHANNELS", value);
-            else if (key.equalsIgnoreCase("CHANLIMIT"))
+            } else if ("CHANLIMIT".equalsIgnoreCase(key)) {
                 chanlimit = value;
-            else if (key.equalsIgnoreCase("NICKLEN"))
+            } else if ("NICKLEN".equalsIgnoreCase(key)) {
                 maxNickLength = tryParseInt("NICKLEN", value);
-            else if (key.equalsIgnoreCase("MAXBANS"))
+            } else if ("MAXBANS".equalsIgnoreCase(key)) {
                 maxBans = tryParseInt("MAXBANS", value);
-            else if (key.equalsIgnoreCase("MAXLIST")) {
+            } else if ("MAXLIST".equalsIgnoreCase(key)) {
                 StringTokenizer maxListTokens = new StringTokenizer(value, ":,");
                 ImmutableMap.Builder<String, Integer> maxListBuilder = ImmutableMap.builder();
                 while (maxListTokens.hasMoreTokens()) {
@@ -158,57 +159,57 @@ public class ServerInfo {
                     maxListBuilder.put(next, tryParseInt("MAXLIST>" + next, maxListTokens.nextToken()));
                 }
                 maxList = maxListBuilder.build();
-            } else if (key.equalsIgnoreCase("NETWORK"))
+            } else if ("NETWORK".equalsIgnoreCase(key)) {
                 network = value;
-            else if (key.equalsIgnoreCase("EXCEPTS"))
+            } else if ("EXCEPTS".equalsIgnoreCase(key)) {
                 exceptBans = value;
-            else if (key.equalsIgnoreCase("INVEX"))
+            } else if ("INVEX".equalsIgnoreCase(key)) {
                 exceptInvites = value;
-            else if (key.equalsIgnoreCase("WALLCHOPS"))
+            } else if ("WALLCHOPS".equalsIgnoreCase(key)) {
                 wallOps = true;
-            else if (key.equalsIgnoreCase("WALLVOICES"))
+            } else if ("WALLVOICES".equalsIgnoreCase(key)) {
                 wallVoices = true;
-            else if (key.equalsIgnoreCase("STATUSMSG"))
+            } else if ("STATUSMSG".equalsIgnoreCase(key)) {
                 statusMessage = value;
-            else if (key.equalsIgnoreCase("CASEMAPPING"))
+            } else if ("CASEMAPPING".equalsIgnoreCase(key)) {
                 caseMapping = value;
-            else if (key.equalsIgnoreCase("ELIST"))
+            } else if ("ELIST".equalsIgnoreCase(key)) {
                 eList = value;
-            else if (key.equalsIgnoreCase("TOPICLEN"))
+            } else if ("TOPICLEN".equalsIgnoreCase(key)) {
                 topicLength = tryParseInt("TOPICLEN", value);
-            else if (key.equalsIgnoreCase("KICKLEN"))
+            } else if ("KICKLEN".equalsIgnoreCase(key)) {
                 kickLength = tryParseInt("KICKLEN", value);
-            else if (key.equalsIgnoreCase("CHANNELLEN"))
+            } else if ("CHANNELLEN".equalsIgnoreCase(key)) {
                 channelLength = tryParseInt("CHANNELLEN", value);
-            else if (key.equalsIgnoreCase("CHIDLEN"))
+            } else if ("CHIDLEN".equalsIgnoreCase(key)) {
                 channelIDLength = "!:" + tryParseInt("CHIDLEN", value);
-            else if (key.equalsIgnoreCase("IDCHAN"))
+            } else if ("IDCHAN".equalsIgnoreCase(key)) {
                 channelIDLength = value;
-            else if (key.equalsIgnoreCase("STD"))
+            } else if ("STD".equalsIgnoreCase(key)) {
                 standard = value;
-            else if (key.equalsIgnoreCase("SILENCE"))
+            } else if ("SILENCE".equalsIgnoreCase(key)) {
                 silence = tryParseInt("SILENCE", value);
-            else if (key.equalsIgnoreCase("RFC2812"))
+            } else if ("RFC2812".equalsIgnoreCase(key)) {
                 RFC2812 = true;
-            else if (key.equalsIgnoreCase("PENALTY"))
+            } else if ("PENALTY".equalsIgnoreCase(key)) {
                 penalty = true;
-            else if (key.equalsIgnoreCase("CPRIVMSG"))
+            } else if ("CPRIVMSG".equalsIgnoreCase(key)) {
                 cPrivMsgExists = true;
-            else if (key.equalsIgnoreCase("CNOTICE"))
+            } else if ("CNOTICE".equalsIgnoreCase(key)) {
                 cNoticeExists = true;
-            else if (key.equalsIgnoreCase("SAFELIST"))
+            } else if ("SAFELIST".equalsIgnoreCase(key)) {
                 safeList = true;
-            else if (key.equalsIgnoreCase("KNOCK"))
+            } else if ("KNOCK".equalsIgnoreCase(key)) {
                 knockExists = true;
-            else if (key.equalsIgnoreCase("WHOX"))
+            } else if ("WHOX".equalsIgnoreCase(key)) {
                 whoX = true;
-            else if (key.equalsIgnoreCase("CALLERID") || key.equalsIgnoreCase("ACCEPT"))
+            } else if ("CALLERID".equalsIgnoreCase(key) || "ACCEPT".equalsIgnoreCase(key)) {
                 callerID = true;
-            else if (key.equalsIgnoreCase("USERIP"))
+            } else if ("USERIP".equalsIgnoreCase(key)) {
                 userIPExists = true;
-            else if (key.equalsIgnoreCase("CNOTICE"))
+            } else if ("CNOTICE".equalsIgnoreCase(key)) {
                 cNoticeExists = true;
-            else if (key.equalsIgnoreCase("EXTBAN")) {
+            } else if ("EXTBAN".equalsIgnoreCase(key)) {
                 if (value.contains(",")) {
                     String[] valueSplit = StringUtils.split(value, ",", 2);
                     if (valueSplit.length == 2) {

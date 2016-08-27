@@ -70,11 +70,14 @@ public class UtilSSLSocketFactory extends SSLSocketFactory {
      * @return The current UtilSSLSocketFactory instance
      */
     public UtilSSLSocketFactory trustAllCertificates() {
-        if (wrappedFactoryChanged)
+        if (wrappedFactoryChanged) {
             throw new RuntimeException("Cannot combine trustAllCertificates() and disableDiffieHellman(SSLSocketFactory)");
+        }
         if (trustingAllCertificates)
             //Already doing this, no need to do it again
+        {
             return this;
+        }
         trustingAllCertificates = true;
         try {
             TrustManager[] tm = new TrustManager[]{new TrustingX509TrustManager()};
@@ -116,8 +119,9 @@ public class UtilSSLSocketFactory extends SSLSocketFactory {
      * @return The current UtilSSLSocketFactory instance
      */
     public UtilSSLSocketFactory disableDiffieHellman(SSLSocketFactory sourceSocketFactory) {
-        if (trustingAllCertificates)
+        if (trustingAllCertificates) {
             throw new RuntimeException("Cannot combine trustAllCertificates() and disableDiffieHellman(SSLSocketFactory)");
+        }
         wrappedFactory = sourceSocketFactory;
         wrappedFactoryChanged = true;
         return disableDiffieHellman();
@@ -126,10 +130,12 @@ public class UtilSSLSocketFactory extends SSLSocketFactory {
     protected SSLSocket prepare(Socket socket) {
         SSLSocket sslSocket = (SSLSocket) socket;
         if (diffieHellmanDisabled) {
-            List<String> limited = new LinkedList<String>();
-            for (String suite : sslSocket.getEnabledCipherSuites())
-                if (!suite.contains("_DHE_"))
+            List<String> limited = new LinkedList<>();
+            for (String suite : sslSocket.getEnabledCipherSuites()) {
+                if (!suite.contains("_DHE_")) {
                     limited.add(suite);
+                }
+            }
             sslSocket.setEnabledCipherSuites(limited.toArray(new String[limited.size()]));
         }
         return sslSocket;

@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import static org.testng.Assert.*;
 import org.pircbotx.cap.EnableCapHandler;
 import org.pircbotx.cap.SASLCapHandler;
-import org.pircbotx.exception.CAPException;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.events.ExceptionEvent;
 import org.pircbotx.hooks.events.ServerResponseEvent;

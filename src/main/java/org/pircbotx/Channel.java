@@ -44,17 +44,9 @@ import java.util.concurrent.CountDownLatch;
 @Getter
 @Setter(AccessLevel.PROTECTED)
 public class Channel implements Comparable<Channel> {
-    /**
-     * The name of the channel. Will never change
-     */
+
     protected final String name;
-    /**
-     * Unique UUID for this channel <i>instance</i>
-     */
     protected final UUID channelId;
-    /**
-     * The bot that this channel came from
-     */
     protected final PircBotX bot;
     //Output is lazily created since it might not ever be used
     @Getter(AccessLevel.NONE)
@@ -64,59 +56,26 @@ public class Channel implements Comparable<Channel> {
             return bot.getConfiguration().getBotFactory().createOutputChannel(bot, Channel.this);
         }
     };
+    @Getter(AccessLevel.NONE)
+    protected final Object modeChangeLock = new Object();
     @Setter(AccessLevel.NONE)
     protected String mode = "";
-    /**
-     * The current channel topic
-     */
     protected String topic = "";
-    /**
-     * Timestamp of when the topic was created. Defaults to 0
-     */
     protected long topicTimestamp;
-    /**
-     * Timestamp of when channel was created. Defaults to 0
-     */
     protected long createTimestamp;
-    /**
-     * The user who set the topic. Default is blank
-     */
     protected UserHostmask topicSetter;
-    /**
-     * Moderated (+m) status
-     */
     protected boolean moderated = false;
-    /**
-     * No external messages (+n) status
-     */
     protected boolean noExternalMessages = false;
-    /**
-     * Invite only (+i) status
-     */
     protected boolean inviteOnly = false;
-    /**
-     * Secret (+s) status
-     */
     protected boolean secret = false;
-    /**
-     * Private (+p) status
-     */
     protected boolean channelPrivate = false;
     @Getter(AccessLevel.NONE)
     protected boolean topicProtection = false;
-    /**
-     * Channel limit (+l #)
-     */
     protected int channelLimit = -1;
-    /**
-     * Channel key (+k)
-     */
     protected String channelKey = null;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     protected CountDownLatch modeChangeLatch = null;
-    @Getter(AccessLevel.NONE)
-    protected final Object modeChangeLock = new Object();
 
     protected Channel(PircBotX bot, String name) {
         this.bot = bot;
@@ -158,9 +117,9 @@ public class Channel implements Comparable<Channel> {
                 //Mode contains arguments which are impossible to parse.
                 //Could be a ban command (we shouldn't use this), channel key (should, but where), etc
                 //Need to ask server
-                if (mode == null)
+                if (mode == null) {
                     log.trace("Unknown args in channel {} mode '{}', waiting on server to respond with mode", name, rawMode);
-                else {
+                } else {
                     log.trace("Unknown args in channel {} mode '{}', getting fresh mode", name, rawMode);
                     mode = null;
                     send().getMode();
@@ -168,15 +127,17 @@ public class Channel implements Comparable<Channel> {
             } else {
                 //Parse mode by switching between removing and adding by the existance of a + or - sign
                 boolean adding = true;
-                for (char curChar : rawMode.toCharArray())
-                    if (curChar == '-')
+                for (char curChar : rawMode.toCharArray()) {
+                    if (curChar == '-') {
                         adding = false;
-                    else if (curChar == '+')
+                    } else if (curChar == '+') {
                         adding = true;
-                    else if (adding)
+                    } else if (adding) {
                         mode = mode + curChar;
-                    else
+                    } else {
                         mode = mode.replace(Character.toString(curChar), "");
+                    }
+                }
             }
         }
     }
@@ -196,8 +157,9 @@ public class Channel implements Comparable<Channel> {
      */
     public String getMode() {
         synchronized (modeChangeLock) {
-            if (mode != null)
+            if (mode != null) {
                 return mode;
+            }
         }
 
         log.debug("Pausing channel {} getMode() until server responds with fresh mode", name);
@@ -217,8 +179,9 @@ public class Channel implements Comparable<Channel> {
             }
 
             synchronized (modeChangeLock) {
-                if (mode != null)
+                if (mode != null) {
                     return mode;
+                }
             }
         }
     }
@@ -321,19 +284,21 @@ public class Channel implements Comparable<Channel> {
             String modeLetters = params.next();
             for (int i = 0; i < modeLetters.length(); i++) {
                 char curModeChar = modeLetters.charAt(i);
-                if (curModeChar == '+')
+                if (curModeChar == '+') {
                     adding = true;
-                else if (curModeChar == '-')
+                } else if (curModeChar == '-') {
                     adding = false;
-                else {
+                } else {
                     ChannelModeHandler modeHandler = bot.getConfiguration().getChannelModeHandlers().get(curModeChar);
-                    if (modeHandler != null)
+                    if (modeHandler != null) {
                         modeHandler.handleMode(bot, this, null, null, params, adding, false);
+                    }
                 }
             }
 
-            if (modeChangeLatch != null)
+            if (modeChangeLatch != null) {
                 modeChangeLatch.countDown();
+            }
         }
     }
 
@@ -354,8 +319,9 @@ public class Channel implements Comparable<Channel> {
      */
     public ImmutableSortedSet<String> getUsersNicks() {
         ImmutableSortedSet.Builder<String> builder = ImmutableSortedSet.naturalOrder();
-        for (User curUser : getDao().getUsers(this))
+        for (User curUser : getDao().getUsers(this)) {
             builder.add(curUser.getNick());
+        }
         return builder.build();
     }
 

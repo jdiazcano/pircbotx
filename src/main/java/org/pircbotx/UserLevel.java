@@ -38,8 +38,9 @@ public enum UserLevel {
      */
     public static String getSymbols() {
         StringBuilder symbols = new StringBuilder();
-        for (UserLevel curLevel : values())
+        for (UserLevel curLevel : values()) {
             symbols.append(curLevel.getSymbol());
+        }
         return symbols.toString();
     }
 
@@ -49,9 +50,11 @@ public enum UserLevel {
      * @return Matching UserLevel or null if not found
      */
     public static UserLevel fromSymbol(char symbol) {
-        for (UserLevel curLevel : values())
-            if (curLevel.getSymbol().contains(String.valueOf(symbol)))
+        for (UserLevel curLevel : values()) {
+            if (curLevel.getSymbol().contains(String.valueOf(symbol))) {
                 return curLevel;
+            }
+        }
         return null;
     }
 }

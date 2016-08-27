@@ -224,8 +224,9 @@ public class OutputIRC {
      */
     public void listChannels(String parameters) {
         checkNotNull(parameters, "Parameters cannot be null");
-        if (!bot.getInputParser().isChannelListRunning())
+        if (!bot.getInputParser().isChannelListRunning()) {
             bot.sendRaw().rawLine("LIST " + parameters);
+        }
     }
 
     /**

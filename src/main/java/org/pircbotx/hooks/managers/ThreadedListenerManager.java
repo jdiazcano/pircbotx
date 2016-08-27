@@ -105,8 +105,9 @@ public class ThreadedListenerManager extends AbstractListenerManager {
     public void onEvent(Event event) {
         super.onEvent(event);
         //For each Listener, add a new Runnable
-        for (Listener curListener : getListenersReal())
+        for (Listener curListener : getListenersReal()) {
             submitEvent(pool, curListener, event);
+        }
     }
 
     protected void submitEvent(ExecutorService pool, final Listener listener, final Event event) {
@@ -132,13 +133,14 @@ public class ThreadedListenerManager extends AbstractListenerManager {
         }
 
         //Wait for all remaining tasks to return
-        for (ManagedFutureTask curFuture : remainingTasks)
+        for (ManagedFutureTask curFuture : remainingTasks) {
             try {
                 log.debug("Waiting for listener " + curFuture.getListener() + " to execute event " + curFuture.getEvent());
                 curFuture.get();
             } catch (Exception e) {
                 throw new RuntimeException("Cannot shutdown listener " + curFuture.getListener() + " executing event " + curFuture.getEvent(), e);
             }
+        }
     }
 
     @Getter
@@ -150,18 +152,20 @@ public class ThreadedListenerManager extends AbstractListenerManager {
             super(run, null);
             this.listener = listener;
             this.event = event;
-            if (event.getBot() != null)
+            if (event.getBot() != null) {
                 synchronized (runningListeners) {
                     runningListeners.put(event.getBot(), this);
                 }
+            }
         }
 
         @Override
         protected void done() {
-            if (event.getBot() != null)
+            if (event.getBot() != null) {
                 synchronized (runningListeners) {
                     runningListeners.remove(event.getBot(), this);
                 }
+            }
         }
     }
 }

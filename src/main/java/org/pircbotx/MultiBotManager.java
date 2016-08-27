@@ -108,8 +108,9 @@ public class MultiBotManager {
     public void addNetwork(Configuration config) {
         checkNotNull(config, "Configuration cannot be null");
         //Since creating a bot is expensive, verify the state first
-        if (state != State.NEW && state != State.RUNNING)
+        if (state != State.NEW && state != State.RUNNING) {
             throw new RuntimeException("MultiBotManager is not running. State: " + state);
+        }
         addNetwork(new PircBotX(config));
     }
 
@@ -138,8 +139,9 @@ public class MultiBotManager {
         } else if (state == State.RUNNING) {
             log.debug("Already running, start bot immediately");
             startBot(bot);
-        } else
+        } else {
             throw new RuntimeException("MultiBotManager is not running. State: " + state);
+        }
     }
 
     /**
@@ -147,13 +149,15 @@ public class MultiBotManager {
      */
     public void start() {
         synchronized (stateLock) {
-            if (state != State.NEW)
+            if (state != State.NEW) {
                 throw new RuntimeException("MultiBotManager has already been started. State: " + state);
+            }
             state = State.STARTING;
         }
 
-        for (PircBotX bot : startQueue)
+        for (PircBotX bot : startQueue) {
             startBot(bot);
+        }
         startQueue.clear();
 
         synchronized (stateLock) {
@@ -185,14 +189,17 @@ public class MultiBotManager {
      */
     public void stop(String quitMessage) {
         synchronized (stateLock) {
-            if (state != State.RUNNING)
+            if (state != State.RUNNING) {
                 throw new RuntimeException("MultiBotManager cannot be stopped again or before starting. State: " + state);
+            }
             state = State.STOPPING;
         }
 
-        for (PircBotX bot : runningBots.keySet())
-            if (bot.isConnected())
+        for (PircBotX bot : runningBots.keySet()) {
+            if (bot.isConnected()) {
                 bot.sendIRC().quitServer(quitMessage);
+            }
+        }
 
         botPool.shutdown();
     }
@@ -206,10 +213,11 @@ public class MultiBotManager {
         stop();
 
         Joiner commaJoiner = Joiner.on(", ");
-        do
+        do {
             synchronized (runningBotsLock) {
                 log.debug("Waiting 5 seconds for bot(s) [{}] to terminate ", commaJoiner.join(runningBots.values()));
             }
+        }
         while (!botPool.awaitTermination(5, TimeUnit.SECONDS));
     }
 
@@ -279,11 +287,13 @@ public class MultiBotManager {
                 runningBotsNumbers.remove(bot);
 
                 //Change state to TERMINATED if this is the last but to be removed during shutdown
-                if (runningBots.isEmpty() && state == State.STOPPING)
+                if (runningBots.isEmpty() && state == State.STOPPING) {
                     synchronized (stateLock) {
-                        if (state == State.STOPPING)
+                        if (state == State.STOPPING) {
                             state = State.TERMINATED;
+                        }
                     }
+                }
             }
         }
     }

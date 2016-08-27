@@ -71,11 +71,13 @@ public abstract class FileTransfer {
      */
     public void transfer() throws IOException {
         //Prevent being called multiple times
-        if (state != DccState.INIT)
+        if (state != DccState.INIT) {
             synchronized (stateLock) {
-                if (state != DccState.INIT)
+                if (state != DccState.INIT) {
                     throw new RuntimeException("Cannot receive file twice (Current state: " + state + ")");
+                }
             }
+        }
         state = DccState.RUNNING;
 
         transferFile();

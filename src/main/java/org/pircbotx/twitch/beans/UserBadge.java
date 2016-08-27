@@ -1,4 +1,4 @@
-package org.pircbotx.twitch.enums;
+package org.pircbotx.twitch.beans;
 
 public class UserBadge {
     private String badge;

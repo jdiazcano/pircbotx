@@ -52,16 +52,16 @@ public class DccHandler implements Closeable {
     protected static final int TOKEN_RANDOM_MAX = 20000;
     @NonNull
     protected final PircBotX bot;
-    protected final Map<PendingRecieveFileTransfer, CountDownLatch> pendingReceiveTransfers = new HashMap<PendingRecieveFileTransfer, CountDownLatch>();
-    protected final List<PendingSendFileTransfer> pendingSendTransfers = new ArrayList<PendingSendFileTransfer>();
-    protected final Map<PendingSendFileTransferPassive, CountDownLatch> pendingSendPassiveTransfers = new HashMap<PendingSendFileTransferPassive, CountDownLatch>();
-    protected final Map<PendingSendChatPassive, CountDownLatch> pendingSendPassiveChat = new HashMap<PendingSendChatPassive, CountDownLatch>();
+    protected final Map<PendingRecieveFileTransfer, CountDownLatch> pendingReceiveTransfers = new HashMap<>();
+    protected final List<PendingSendFileTransfer> pendingSendTransfers = new ArrayList<>();
+    protected final Map<PendingSendFileTransferPassive, CountDownLatch> pendingSendPassiveTransfers = new HashMap<>();
+    protected final Map<PendingSendChatPassive, CountDownLatch> pendingSendPassiveChat = new HashMap<>();
     protected boolean shuttingDown = false;
 
     public boolean processDcc(UserHostmask userHostmask, final User user, String request) throws IOException {
         List<String> requestParts = tokenizeDccRequest(request);
         String type = requestParts.get(1);
-        if (type.equals("SEND")) {
+        if ("SEND".equals(type)) {
             //Someone is trying to send a file to us
             //Example: DCC SEND <filename>  <ip> <port> <file size> <transferToken> (note File size is optional)
             String rawFilename = requestParts.get(2);
@@ -72,7 +72,7 @@ public class DccHandler implements Closeable {
             long size = Long.parseLong(Utils.tryGetIndex(requestParts, 5, "-1"));
             String transferToken = Utils.tryGetIndex(requestParts, 6, null);
 
-            if (transferToken != null)
+            if (transferToken != null) {
                 //Check if this is an acknowledgement of a passive dcc file request
                 synchronized (pendingSendPassiveTransfers) {
                     Iterator<Map.Entry<PendingSendFileTransferPassive, CountDownLatch>> pendingItr = pendingSendPassiveTransfers.entrySet().iterator();
@@ -91,14 +91,17 @@ public class DccHandler implements Closeable {
                         }
                     }
                 }
+            }
 
             //Nope, this is a new transfer
             if (port == 0 || transferToken != null)
                 //User is trying to use reverse DCC
+            {
                 bot.getConfiguration().getListenerManager().onEvent(new IncomingFileTransferEvent(bot, userHostmask, user, rawFilename, safeFilename, address, port, size, transferToken, true));
-            else
+            } else {
                 bot.getConfiguration().getListenerManager().onEvent(new IncomingFileTransferEvent(bot, userHostmask, user, rawFilename, safeFilename, address, port, size, transferToken, false));
-        } else if (type.equals("RESUME")) {
+            }
+        } else if ("RESUME".equals(type)) {
             //Someone is trying to resume sending a file to us
             //Example: DCC RESUME <filename> 0 <position> <token>
             //Reply with: DCC ACCEPT <filename> 0 <position> <token>
@@ -123,7 +126,7 @@ public class DccHandler implements Closeable {
                         }
                     }
                 }
-            } else
+            } else {
                 synchronized (pendingSendTransfers) {
                     Iterator<PendingSendFileTransfer> pendingItr = pendingSendTransfers.iterator();
                     while (pendingItr.hasNext()) {
@@ -137,10 +140,11 @@ public class DccHandler implements Closeable {
                         }
                     }
                 }
+            }
 
             //Haven't returned yet, received an unknown transfer
             throw new DccException(DccException.Reason.UnknownFileTransferResume, user, "Transfer line: " + request);
-        } else if (type.equals("ACCEPT")) {
+        } else if ("ACCEPT".equals(type)) {
             //Someone is acknowledging a transfer resume
             //Example (normal):  DCC ACCEPT <filename> <port> <position>
             //Example (passive): DCC ACCEPT <filename> 0 <position> <token>
@@ -175,7 +179,7 @@ public class DccHandler implements Closeable {
                     }
                 }
             }
-        } else if (type.equals("CHAT")) {
+        } else if ("CHAT".equals(type)) {
             //Someone is trying to chat with us
             //Example: DCC CHAT <protocol> <ip> <port> (protocol should be chat)
             InetAddress address = parseRawAddress(requestParts.get(3));
@@ -183,7 +187,7 @@ public class DccHandler implements Closeable {
             String chatToken = Utils.tryGetIndex(requestParts, 5, null);
 
             //Check if this is an acknowledgement of a passive chat request
-            if (chatToken != null)
+            if (chatToken != null) {
                 synchronized (pendingSendPassiveChat) {
                     Iterator<Map.Entry<PendingSendChatPassive, CountDownLatch>> pendingItr = pendingSendPassiveChat.entrySet().iterator();
                     while (pendingItr.hasNext()) {
@@ -200,14 +204,17 @@ public class DccHandler implements Closeable {
                         }
                     }
                 }
+            }
 
             //Nope, this is a new chat
-            if (port == 0 && chatToken != null)
+            if (port == 0 && chatToken != null) {
                 bot.getConfiguration().getListenerManager().onEvent(new IncomingChatRequestEvent(bot, userHostmask, user, address, port, chatToken, true));
-            else
+            } else {
                 bot.getConfiguration().getListenerManager().onEvent(new IncomingChatRequestEvent(bot, userHostmask, user, address, port, chatToken, false));
-        } else
+            }
+        } else {
             return false;
+        }
         return true;
     }
 
@@ -289,21 +296,25 @@ public class DccHandler implements Closeable {
         }
 
         //Tell user were going to resume transfering
-        if (event.isPassive())
+        if (event.isPassive()) {
             bot.sendDCC().filePassiveResumeRequest(event.getUser().getNick(), event.getRawFilename(), startPosition, event.getToken());
-        else
+        } else {
             bot.sendDCC().fileResumeRequest(event.getUser().getNick(), event.getRawFilename(), event.getPort(), startPosition);
+        }
 
         //Wait for response
-        if (!countdown.await(bot.getConfiguration().getDccResumeAcceptTimeout(), TimeUnit.MILLISECONDS))
+        if (!countdown.await(bot.getConfiguration().getDccResumeAcceptTimeout(), TimeUnit.MILLISECONDS)) {
             throw new DccException(DccException.Reason.FileTransferResumeTimeout, event.getUser(), "Event: " + event);
-        if (shuttingDown)
+        }
+        if (shuttingDown) {
             throw new DccException(DccException.Reason.FileTransferResumeCancelled, event.getUser(), "Transfer " + event + " canceled due to bot shutting down");
+        }
 
         //User has accepted resume, begin transfer
-        if (pendingTransfer.getPosition() != startPosition)
+        if (pendingTransfer.getPosition() != startPosition) {
             log.warn("User is resuming transfer at position {} instead of requested position {} for transfer {}. Defaulting to users position",
                     pendingTransfer.getPosition(), startPosition, event);
+        }
         return acceptFileTransfer(event, destination, pendingTransfer.getPosition());
     }
 
@@ -367,10 +378,12 @@ public class DccHandler implements Closeable {
                     receiver.getNick(),
                     bot.getConfiguration().getDccAcceptTimeout(),
                     publicAddress);
-            if (!countdown.await(dccAcceptTimeout, TimeUnit.MILLISECONDS))
+            if (!countdown.await(dccAcceptTimeout, TimeUnit.MILLISECONDS)) {
                 throw new DccException(DccException.Reason.ChatTimeout, receiver, "");
-            if (shuttingDown)
+            }
+            if (shuttingDown) {
                 throw new DccException(DccException.Reason.ChatCancelled, receiver, "");
+            }
             Socket chatSocket = new Socket(pendingChat.getReceiverAddress(), pendingChat.getReceiverPort());
             return bot.getConfiguration().getBotFactory().createSendChat(bot, receiver, chatSocket);
         } else {
@@ -425,11 +438,13 @@ public class DccHandler implements Closeable {
 
         //Make the filename safe to send
         String safeFilename = file.getName();
-        if (safeFilename.contains(" "))
-            if (bot.getConfiguration().isDccFilenameQuotes())
+        if (safeFilename.contains(" ")) {
+            if (bot.getConfiguration().isDccFilenameQuotes()) {
                 safeFilename = "\"" + safeFilename + "\"";
-            else
+            } else {
                 safeFilename = safeFilename.replace(" ", "_");
+            }
+        }
 
         if (passive) {
             String transferToken = Integer.toString(TOKEN_RANDOM.nextInt(TOKEN_RANDOM_MAX));
@@ -447,11 +462,13 @@ public class DccHandler implements Closeable {
                     bot.getConfiguration().getDccAcceptTimeout(),
                     publicAddress,
                     file.getAbsolutePath());
-            if (!countdown.await(bot.getConfiguration().getDccAcceptTimeout(), TimeUnit.MILLISECONDS))
+            if (!countdown.await(bot.getConfiguration().getDccAcceptTimeout(), TimeUnit.MILLISECONDS)) {
                 throw new DccException(DccException.Reason.FileTransferTimeout, receiver, "File: " + file.getAbsolutePath());
-            if (shuttingDown)
+            }
+            if (shuttingDown) {
                 throw new DccException(DccException.Reason.FileTransferCancelled, receiver, "Transfer of file " + file.getAbsolutePath()
                         + " canceled due to bot shutdown");
+            }
             Socket transferSocket = new Socket(pendingPassiveTransfer.getReceiverAddress(), pendingPassiveTransfer.getReceiverPort());
             return bot.getConfiguration().getBotFactory().createSendFileTransfer(bot, transferSocket, receiver, file, pendingPassiveTransfer.getStartPosition());
         } else {
@@ -532,9 +549,10 @@ public class DccHandler implements Closeable {
         ServerSocket ss = null;
         if (dccPorts.isEmpty())
             // Use any free port.
+        {
             ss = new ServerSocket(0, 1, address);
-        else {
-            for (int currentPort : dccPorts)
+        } else {
+            for (int currentPort : dccPorts) {
                 try {
                     ss = new ServerSocket(currentPort, 1, address);
                     // Found a port number we could use.
@@ -543,9 +561,12 @@ public class DccHandler implements Closeable {
                     // Do nothing; go round and try another port.
                     log.debug("Failed to create server socket on port " + currentPort + ", trying next one", e);
                 }
+            }
             if (ss == null)
                 // No ports could be used.
+            {
                 throw new DccException(DccException.Reason.DccPortsInUse, user, "Ports " + dccPorts + " are in use.");
+            }
         }
         ss.setSoTimeout(bot.getConfiguration().getDccAcceptTimeout());
         return ss;
@@ -555,12 +576,14 @@ public class DccHandler implements Closeable {
         int quotesIndexBegin = request.indexOf('"');
         if (quotesIndexBegin == -1)
             //Just use tokenizeLine
+        {
             return Utils.tokenizeLine(request);
+        }
 
         //This is a slightly modified version of Utils.tokenizeLine to parse
         //potential quotes in filenames
         int quotesIndexEnd = request.lastIndexOf('"');
-        List<String> stringParts = new ArrayList<String>();
+        List<String> stringParts = new ArrayList<>();
         int pos = 0, end;
         while ((end = request.indexOf(' ', pos)) >= 0) {
             if (pos >= quotesIndexBegin && end < quotesIndexEnd) {
@@ -590,23 +613,27 @@ public class DccHandler implements Closeable {
         int pendingCount = pendingReceiveTransfers.values().size() + pendingSendPassiveTransfers.values().size();
         if (pendingCount > 0) {
             log.info("Terminating {} DCC transfers waiting to be accepted", pendingCount);
-            for (CountDownLatch curCountdown : pendingReceiveTransfers.values())
+            for (CountDownLatch curCountdown : pendingReceiveTransfers.values()) {
                 curCountdown.countDown();
-            for (CountDownLatch curCountdown : pendingSendPassiveTransfers.values())
+            }
+            for (CountDownLatch curCountdown : pendingSendPassiveTransfers.values()) {
                 curCountdown.countDown();
+            }
         }
     }
 
     public static String addressToInteger(InetAddress address) {
-        if (address instanceof Inet6Address)
+        if (address instanceof Inet6Address) {
             return address.getHostAddress();
+        }
         return new BigInteger(1, address.getAddress()).toString();
     }
 
     public static InetAddress parseRawAddress(String rawAddress) throws UnknownHostException {
         //Some IPv6 clients are sending the full IPv6 address instead of a bigint
-        if (rawAddress.contains(":"))
+        if (rawAddress.contains(":")) {
             return Inet6Address.getByName(rawAddress);
+        }
 
         //Convert the rawInteger into something usable
         BigInteger bigIp = new BigInteger(rawAddress);
@@ -615,8 +642,9 @@ public class DccHandler implements Closeable {
         //If there aren't enough bytes, pad with 0 byte
         if (addressBytes.length == 5)
             //Has signum, strip it
+        {
             addressBytes = Arrays.copyOfRange(addressBytes, 1, 5);
-        else if (addressBytes.length < 4) {
+        } else if (addressBytes.length < 4) {
             byte[] newAddressBytes = new byte[4];
             newAddressBytes[3] = addressBytes[0];
             newAddressBytes[2] = (addressBytes.length > 1) ? addressBytes[1] : (byte) 0;
@@ -625,7 +653,9 @@ public class DccHandler implements Closeable {
             addressBytes = newAddressBytes;
         } else if (addressBytes.length == 17)
             //Has signum, strip it
+        {
             addressBytes = Arrays.copyOfRange(addressBytes, 1, 17);
+        }
         try {
             return InetAddress.getByAddress(addressBytes);
         } catch (UnknownHostException ex) {

@@ -109,10 +109,11 @@ public class ActionEvent extends Event implements GenericMessageEvent, GenericCh
 
     @Override
     public void respondWith(String fullLine) {
-        if (getChannel() == null)
+        if (getChannel() == null) {
             getUserHostmask().send().action(fullLine);
-        else
+        } else {
             getBot().sendIRC().action(channelSource, fullLine);
+        }
     }
 
     /**
@@ -121,8 +122,9 @@ public class ActionEvent extends Event implements GenericMessageEvent, GenericCh
      * @param response The response to send
      */
     public void respondChannel(String response) {
-        if (getChannel() == null)
+        if (getChannel() == null) {
             throw new RuntimeException("Event does not contain a channel");
+        }
         getBot().sendIRC().message(channelSource, response);
     }
 

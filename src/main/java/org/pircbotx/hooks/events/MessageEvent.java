@@ -107,8 +107,9 @@ public class MessageEvent extends Event implements GenericMessageEvent, GenericC
      * @param response The response to send
      */
     public void respondChannel(String response) {
-        if (getChannel() == null)
+        if (getChannel() == null) {
             throw new RuntimeException("Event does not contain a channel");
+        }
         getBot().sendIRC().message(channelSource, response);
     }
 

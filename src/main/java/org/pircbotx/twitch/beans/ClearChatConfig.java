@@ -1,5 +1,6 @@
 package org.pircbotx.twitch.beans;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import lombok.ToString;
 
@@ -18,7 +19,7 @@ public class ClearChatConfig extends BaseConfig {
 
     public ClearChatConfig(String message, List<String> parsedLine, ImmutableMap<String, String> tags, String line) {
         super(message, parsedLine, line);
-        this.userName = line.substring(line.lastIndexOf(":") + 1);
+        this.userName = message;
         this.banDuration = Integer.parseInt(tags.getOrDefault("ban-duration", "-1"));
         this.banReason = tags.get("ban-reason");
     }
@@ -28,7 +29,7 @@ public class ClearChatConfig extends BaseConfig {
     }
 
     public boolean isChannel() {
-        return userName == null;
+        return Strings.isNullOrEmpty(userName);
     }
 
     public int getBanDuration() {

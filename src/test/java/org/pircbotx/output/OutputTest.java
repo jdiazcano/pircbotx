@@ -17,9 +17,6 @@
  */
 package org.pircbotx.output;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import org.pircbotx.hooks.managers.GenericListenerManager;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -28,14 +25,10 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
 import javax.net.SocketFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.pircbotx.Channel;
-import org.pircbotx.Configuration;
-import org.pircbotx.InputParser;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.testng.annotations.AfterMethod;

@@ -151,8 +151,9 @@ public class SequentialListenerManager extends AbstractListenerManager {
      * Add a listener to be executed by the supplied executor
      */
     public SequentialListenerManager addListenerExecutor(Listener listener, ListenerExecutor executor) {
-        if (listeners.contains(listener))
+        if (listeners.contains(listener)) {
             throw new IllegalArgumentException("Cannot add listener twice " + listener);
+        }
         listeners.add(listener);
         listenerExecutors.add(executor);
         return this;
@@ -162,8 +163,9 @@ public class SequentialListenerManager extends AbstractListenerManager {
      * Add a listener at the given index to be executed by the supplied executor
      */
     public SequentialListenerManager addListenerExecutor(int index, Listener listener, ListenerExecutor executor) {
-        if (listeners.contains(listener))
+        if (listeners.contains(listener)) {
             throw new IllegalArgumentException("Cannot add listener twice " + listener);
+        }
         listeners.add(index, listener);
         listenerExecutors.add(index, executor);
         return this;
@@ -173,8 +175,9 @@ public class SequentialListenerManager extends AbstractListenerManager {
      * Replace the executor for the supplied listener
      */
     public SequentialListenerManager updateExecutor(Listener listener, ListenerExecutor executor) {
-        if (!listenerExists(listener))
+        if (!listenerExists(listener)) {
             throw new RuntimeException("Listener " + listener + " does not exist in this manager");
+        }
 
         int index = listeners.indexOf(listener);
         listenerExecutors.set(index, executor);
@@ -194,8 +197,9 @@ public class SequentialListenerManager extends AbstractListenerManager {
 
     @Override
     public boolean removeListener(Listener listener) {
-        if (!listeners.contains(listener))
+        if (!listeners.contains(listener)) {
             return false;
+        }
 
         int index = listeners.indexOf(listener);
         listeners.remove(index);
@@ -203,8 +207,8 @@ public class SequentialListenerManager extends AbstractListenerManager {
         return true;
     }
 
-    public static interface ListenerExecutor extends Closeable {
-        public void handleEvent(Event event);
+    public interface ListenerExecutor extends Closeable {
+        void handleEvent(Event event);
     }
 
     @RequiredArgsConstructor
@@ -235,8 +239,9 @@ public class SequentialListenerManager extends AbstractListenerManager {
 
         public void close() throws IOException {
             //TODO: Blocking close or listener tracking
-            if (executor instanceof ExecutorService)
+            if (executor instanceof ExecutorService) {
                 ((ExecutorService) executor).shutdown();
+            }
         }
     }
 
@@ -259,8 +264,9 @@ public class SequentialListenerManager extends AbstractListenerManager {
     @Override
     public void shutdown(PircBotX bot) {
         //TODO: Active listener tracking
-        if (executorPool instanceof ExecutorService)
+        if (executorPool instanceof ExecutorService) {
             ((ExecutorService) executorPool).shutdown();
+        }
     }
 
     /**

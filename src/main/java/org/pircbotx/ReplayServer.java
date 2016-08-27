@@ -81,8 +81,8 @@ public class ReplayServer {
     @RequiredArgsConstructor
     @Slf4j
     protected static class WrapperListenerManager implements ListenerManager {
-        private static interface ImplExclude {
-            public void onEvent(Event event);
+        private interface ImplExclude {
+            void onEvent(Event event);
         }
 
         @Delegate(excludes = ImplExclude.class)
@@ -99,7 +99,7 @@ public class ReplayServer {
     public static void main(String[] args) throws Exception {
         try {
             //Make sure the user specified a file
-            if (args.length != 1 || args[0].trim().length() == 0) {
+            if (args.length != 1 || args[0].trim().isEmpty()) {
                 System.out.println("Usage: org.pircbotx.impl.ReplayServer [log]");
                 System.exit(1);
             }
@@ -118,8 +118,9 @@ public class ReplayServer {
         public void onGenericMessage(GenericMessageEvent event) throws Exception {
             if (event.getMessage().startsWith("?dumpusers")) {
                 System.out.println("===command dumpusers start===");
-                for (User curUser : event.getBot().getUserChannelDao().getAllUsers())
+                for (User curUser : event.getBot().getUserChannelDao().getAllUsers()) {
                     log.debug(curUser.getNick() + "!" + curUser.getLogin() + "@" + curUser.getHostname() + " - " + curUser.getHostmask());
+                }
                 System.out.println("===command dumpusers end===");
             }
         }
@@ -183,18 +184,19 @@ public class ReplayServer {
             //For now skip the info lines PircBotX is supposed to send on connect
             //They are only sent when connect() is called which requires multithreading
             if (!skippedHeader) {
-                if (command.equals("pircbotx.output"))
+                if ("pircbotx.output".equals(command)) {
                     continue;
-                else if (command.equals("pircbotx.input")) {
+                } else if ("pircbotx.input".equals(command)) {
                     log.debug("Finished skipping header");
                     skippedHeader = true;
-                } else
+                } else {
                     throw new RuntimeException("Unknown line " + lineRaw);
+                }
             }
 
-            if (command.equals("pircbotx.input")) {
+            if ("pircbotx.input".equals(command)) {
                 bot.getInputParser().handleLine(line);
-            } else if (command.equals("pircbotx.output")) {
+            } else if ("pircbotx.output".equals(command)) {
                 String lastOutput = outputQueue.isEmpty() ? null : outputQueue.pop();
                 if (StringUtils.startsWith(line, "JOIN")) {
                     log.debug("Skipping JOIN output, server should send its own JOIN");
@@ -212,8 +214,9 @@ public class ReplayServer {
                 throw new RuntimeException("Unknown line " + lineRaw);
             }
 
-            for (Event curEvent : Iterables.consumingIterable(eventQueue))
+            for (Event curEvent : Iterables.consumingIterable(eventQueue)) {
                 log.debug("(events) " + curEvent);
+            }
 
             log.debug("");
         }

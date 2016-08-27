@@ -48,7 +48,7 @@ import java.util.Set;
 @Deprecated
 @Slf4j
 public class GenericListenerManager extends AbstractListenerManager {
-    protected Set<Listener> listeners = new HashSet<Listener>();
+    protected Set<Listener> listeners = new HashSet<>();
     protected ImmutableSet<Listener> listenersImmutable = ImmutableSet.copyOf(listeners);
 
     public void addListener(Listener listener) {

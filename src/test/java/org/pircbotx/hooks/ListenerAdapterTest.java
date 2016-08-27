@@ -19,13 +19,10 @@ package org.pircbotx.hooks;
 
 import com.google.common.collect.Sets;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -36,11 +33,8 @@ import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.TestUtils;
-import org.pircbotx.hooks.events.WhoisEvent;
-import org.pircbotx.hooks.managers.GenericListenerManager;
 import org.pircbotx.hooks.types.GenericEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

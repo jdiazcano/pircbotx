@@ -2,7 +2,6 @@ package org.pircbotx.twitch.beans;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.ToString;
-import org.pircbotx.twitch.enums.UserBadge;
 import org.pircbotx.twitch.enums.UserType;
 import org.pircbotx.twitch.utils.TwitchUtils;
 
@@ -35,13 +34,13 @@ public class PrivMsgConfig extends BaseConfig {
         this.displayName = tags.get("display-name");
         this.emotes = TwitchUtils.parseEmotes(tags.get("emotes"));
         this.messageId = tags.get("id");
-        this.mod = tags.getOrDefault("mod", "0").equals("1");
-        this.subscriber = tags.getOrDefault("subscriber", "0").equals("1");
-        this.turbo = tags.getOrDefault("turbo", "0").equals("1");
+        this.mod = "1".equals(tags.getOrDefault("mod", "0"));
+        this.subscriber = "1".equals(tags.getOrDefault("subscriber", "0"));
+        this.turbo = "1".equals(tags.getOrDefault("turbo", "0"));
         this.roomId = tags.get("room-id");
         this.userId = tags.get("user-id");
 
-        if (tags.getOrDefault("user-type", "").equals("")) {
+        if ("".equals(tags.getOrDefault("user-type", ""))) {
             userType = UserType.NORMAL;
         } else {
             this.userType = UserType.valueOf(tags.get("user-type").toUpperCase());

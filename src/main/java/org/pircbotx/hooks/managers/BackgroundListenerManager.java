@@ -47,9 +47,9 @@ public class BackgroundListenerManager extends ThreadedListenerManager {
     protected final AtomicInteger backgroundCount = new AtomicInteger();
 
     public void addListener(Listener listener, boolean isBackground) {
-        if (!isBackground)
+        if (!isBackground) {
             super.addListener(listener);
-        else {
+        } else {
             BasicThreadFactory factory = new BasicThreadFactory.Builder()
                     .namingPattern("backgroundPool" + managerNumber + "-backgroundThread" + backgroundCount.getAndIncrement() + "-%d")
                     .daemon(true)
@@ -62,8 +62,9 @@ public class BackgroundListenerManager extends ThreadedListenerManager {
     public void onEvent(Event event) {
         //Dispatch to both standard listeners and background listeners
         super.onEvent(event);
-        for (Map.Entry<Listener, ExecutorService> curEntry : backgroundListeners.entrySet())
+        for (Map.Entry<Listener, ExecutorService> curEntry : backgroundListeners.entrySet()) {
             submitEvent(curEntry.getValue(), curEntry.getKey(), event);
+        }
     }
 
     @Override
@@ -76,9 +77,10 @@ public class BackgroundListenerManager extends ThreadedListenerManager {
 
     @Override
     public boolean removeListener(Listener listener) {
-        if (backgroundListeners.containsKey(listener))
+        if (backgroundListeners.containsKey(listener)) {
             return backgroundListeners.remove(listener) != null;
-        else
+        } else {
             return super.removeListener(listener);
+        }
     }
 }

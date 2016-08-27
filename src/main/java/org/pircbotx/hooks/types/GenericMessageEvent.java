@@ -34,17 +34,17 @@ public interface GenericMessageEvent extends GenericUserEvent {
      *
      * @return The message
      */
-    public String getMessage();
+    String getMessage();
 
     /**
      * Send message directly to the user
      *
      * @param message
      */
-    public void respondPrivateMessage(String message);
+    void respondPrivateMessage(String message);
 
     /**
      * Like {@link #respond(String)}, without the Username: prefix
      */
-    public void respondWith(String fullLine);
+    void respondWith(String fullLine);
 }

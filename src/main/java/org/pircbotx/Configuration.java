@@ -156,13 +156,17 @@ public class Configuration {
         checkArgument(builder.getMaxLineLength() > 0, "Max line length must be positive");
         checkArgument(builder.getMessageDelay() >= 0, "Message delay must be positive");
         checkNotNull(builder.getAutoJoinChannels(), "Auto join channels map cannot be null");
-        for (Map.Entry<String, String> curEntry : builder.getAutoJoinChannels().entrySet())
-            if (StringUtils.isBlank(curEntry.getKey()))
+        for (Map.Entry<String, String> curEntry : builder.getAutoJoinChannels().entrySet()) {
+            if (StringUtils.isBlank(curEntry.getKey())) {
                 throw new RuntimeException("Channel must not be blank");
-        if (builder.getNickservPassword() != null)
+            }
+        }
+        if (builder.getNickservPassword() != null) {
             checkArgument(StringUtils.isNotBlank(builder.getNickservPassword()), "Nickserv password cannot be empty");
-        if (builder.getNickservCustomMessage() != null)
+        }
+        if (builder.getNickservCustomMessage() != null) {
             checkArgument(StringUtils.isNotBlank(builder.getNickservCustomMessage()), "Nickserv custom message cannot be empty");
+        }
         checkArgument(StringUtils.isNotBlank(builder.getNickservOnSuccess()), "Nickserv on success cannot be blank");
         checkArgument(StringUtils.isNotBlank(builder.getNickservNick()), "Nickserv nick cannot be blank");
         checkArgument(builder.getAutoReconnectAttempts() > 0, "setAutoReconnectAttempts must be greater than 0");
@@ -736,8 +740,9 @@ public class Configuration {
          * @see #getAutoJoinChannels()
          */
         public Builder addAutoJoinChannel(@NonNull String channel) {
-            if (StringUtils.isBlank(channel))
+            if (StringUtils.isBlank(channel)) {
                 throw new RuntimeException("Channel must not be blank");
+            }
             getAutoJoinChannels().put(channel, "");
             return this;
         }
@@ -749,18 +754,21 @@ public class Configuration {
          * @param channel
          */
         public Builder addAutoJoinChannel(@NonNull String channel, @NonNull String key) {
-            if (StringUtils.isBlank(channel))
+            if (StringUtils.isBlank(channel)) {
                 throw new RuntimeException("Channel must not be blank");
-            if (StringUtils.isBlank(key))
+            }
+            if (StringUtils.isBlank(key)) {
                 throw new RuntimeException("Key must not be blank");
+            }
             getAutoJoinChannels().put(channel, key);
             return this;
         }
 
         //TODO: Temporary backwards compatibility
         private void checkSetServerBackwardsCompatible() {
-            if (servers.size() >= 2)
+            if (servers.size() >= 2) {
                 throw new RuntimeException("Cannot combine deprecated setServer and addServer");
+            }
         }
 
         /**
@@ -794,10 +802,11 @@ public class Configuration {
         @Deprecated
         public Builder setServerHostname(String hostname) {
             checkSetServerBackwardsCompatible();
-            if (servers.size() == 1)
+            if (servers.size() == 1) {
                 servers.add(new ServerEntry(hostname, servers.remove(0).port));
-            else
+            } else {
                 servers.add(new ServerEntry(hostname, 6667));
+            }
             return this;
         }
 
@@ -808,10 +817,11 @@ public class Configuration {
         @Deprecated
         public Builder setServerPort(int port) {
             checkSetServerBackwardsCompatible();
-            if (servers.size() == 1)
+            if (servers.size() == 1) {
                 servers.add(new ServerEntry(servers.remove(0).hostname, port));
-            else
+            } else {
                 servers.add(new ServerEntry("unset", port));
+            }
             return this;
         }
 
@@ -831,21 +841,25 @@ public class Configuration {
         }
 
         public Builder addServers(@NonNull Iterable<ServerEntry> serverEnteries) {
-            for (ServerEntry curServerEntry : serverEnteries)
+            for (ServerEntry curServerEntry : serverEnteries) {
                 servers.add(curServerEntry);
+            }
             return this;
         }
 
         public void replaceCoreHooksListener(CoreHooks extended) {
             //Find the corehooks impl
             CoreHooks orig = null;
-            for (Listener curListener : this.listenerManager.getListeners())
-                if (curListener instanceof CoreHooks)
+            for (Listener curListener : this.listenerManager.getListeners()) {
+                if (curListener instanceof CoreHooks) {
                     orig = (CoreHooks) curListener;
+                }
+            }
 
             //Swap
-            if (orig != null)
+            if (orig != null) {
                 this.listenerManager.removeListener(orig);
+            }
             addListener(extended);
         }
 
@@ -858,8 +872,9 @@ public class Configuration {
          */
         @SuppressWarnings("unchecked")
         public <M extends ListenerManager> M getListenerManager() {
-            if (listenerManager == null)
+            if (listenerManager == null) {
                 setListenerManager(new ThreadedListenerManager());
+            }
             return (M) listenerManager;
         }
 
@@ -874,9 +889,11 @@ public class Configuration {
         @SuppressWarnings("unchecked")
         public Builder setListenerManager(ListenerManager listenerManager) {
             this.listenerManager = listenerManager;
-            for (Listener curListener : this.listenerManager.getListeners())
-                if (curListener instanceof CoreHooks)
+            for (Listener curListener : this.listenerManager.getListeners()) {
+                if (curListener instanceof CoreHooks) {
                     return this;
+                }
+            }
             listenerManager.addListener(new CoreHooks());
             return this;
         }

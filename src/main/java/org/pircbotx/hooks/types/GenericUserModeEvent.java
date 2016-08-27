@@ -32,7 +32,7 @@ public interface GenericUserModeEvent extends GenericUserEvent {
      *
      * @return The hostmask of the user
      */
-    public UserHostmask getRecipientHostmask();
+    UserHostmask getRecipientHostmask();
 
     /**
      * The recipient user that this event applies to.
@@ -40,5 +40,5 @@ public interface GenericUserModeEvent extends GenericUserEvent {
      * @return The user or null if the hostmask didn't match a user at creation
      * time
      */
-    public User getRecipient();
+    User getRecipient();
 }

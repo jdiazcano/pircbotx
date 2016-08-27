@@ -61,8 +61,9 @@ public abstract class AbstractListenerManager implements ListenerManager {
     }
 
     public void onEvent(Event event) {
-        if (event.getBot() != null)
+        if (event.getBot() != null) {
             Utils.addBotToMDC(event.getBot());
+        }
         sublog.debug("Recieved event " + event);
     }
 

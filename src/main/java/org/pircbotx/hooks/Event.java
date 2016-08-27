@@ -87,8 +87,9 @@ public abstract class Event implements GenericEvent {
         ComparisonChain comparison = ComparisonChain.start()
                 .compare(getTimestamp(), other.getTimestamp())
                 .compare(getId(), other.getId());
-        if (bot != null && other.getBot() != null)
+        if (bot != null && other.getBot() != null) {
             comparison.compare(bot.getBotId(), other.getBot().getBotId());
+        }
         return comparison.result();
     }
 

@@ -59,15 +59,18 @@ public class UserChannelMap<U extends User, C extends Channel> {
 
     public void removeUser(U user) {
         //Remove the user from each channel
-        for (Channel curChannel : userToChannelMap.removeAll(user))
+        for (Channel curChannel : userToChannelMap.removeAll(user)) {
             channelToUserMap.remove(curChannel, user);
+        }
     }
 
     public void removeChannel(C channel) {
         //Remove the channel from each user
         for (User curUser : channelToUserMap.removeAll(channel))
             //This will automatically remove the user if they have no more channels
+        {
             userToChannelMap.remove(curUser, channel);
+        }
     }
 
     public ImmutableSortedSet<U> getUsers(C channel) {
@@ -81,16 +84,18 @@ public class UserChannelMap<U extends User, C extends Channel> {
     public boolean containsEntry(U user, C channel) {
         boolean channelToUserContains = channelToUserMap.containsEntry(channel, user);
         boolean userToChannelContains = userToChannelMap.containsEntry(user, channel);
-        if (channelToUserContains != userToChannelContains)
+        if (channelToUserContains != userToChannelContains) {
             throw new RuntimeException("Map inconsistent! User: " + user + " | Channel: " + channel + " | channelToUserMap: " + channelToUserContains + " | userToChannelMap: " + userToChannelContains);
+        }
         return channelToUserContains;
     }
 
     public boolean containsUser(User user) {
         boolean channelToUserContains = channelToUserMap.containsValue(user);
         boolean userToChannelContains = userToChannelMap.containsKey(user);
-        if (channelToUserContains != userToChannelContains)
+        if (channelToUserContains != userToChannelContains) {
             throw new RuntimeException("Map inconsistent! User: " + user + " | channelToUserMap: " + channelToUserContains + " | userToChannelMap: " + userToChannelContains);
+        }
         return channelToUserContains;
     }
 

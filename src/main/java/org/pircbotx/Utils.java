@@ -74,10 +74,11 @@ public final class Utils {
     }
 
     public static <V> V tryGetIndex(List<V> list, int index, V defaultValue) {
-        if (index < list.size())
+        if (index < list.size()) {
             return list.get(index);
-        else
+        } else {
             return defaultValue;
+        }
     }
 
     /**
@@ -109,8 +110,9 @@ public final class Utils {
      */
     @Nullable
     public static String parseCommand(@NonNull String expectedPrefix, @NonNull String rawCommand) {
-        if (rawCommand.startsWith(expectedPrefix))
+        if (rawCommand.startsWith(expectedPrefix)) {
             return rawCommand.substring(expectedPrefix.length());
+        }
         return null;
     }
 
@@ -157,9 +159,10 @@ public final class Utils {
      * @return List of strings.
      */
     public static List<String> tokenizeLine(String input) {
-        List<String> stringParts = new ArrayList<String>();
-        if (input == null || input.length() == 0)
+        List<String> stringParts = new ArrayList<>();
+        if (input == null || input.isEmpty()) {
             return stringParts;
+        }
 
         //Heavily optimized string split by space with all characters after :
         //added as a single entry. Under benchmarks, this is faster than

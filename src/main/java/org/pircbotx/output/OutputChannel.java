@@ -72,8 +72,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param message The message to send
      */
     public void message(UserHostmask user, String message) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't send message to null user");
+        }
         message(user.getNick() + ": " + message);
     }
 
@@ -102,8 +103,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @see OutputIRC#invite(java.lang.String, java.lang.String)
      */
     public void invite(Channel otherChannel) {
-        if (otherChannel == null)
+        if (otherChannel == null) {
             throw new IllegalArgumentException("Can't send invite to null invite channel");
+        }
         bot.sendIRC().invite(otherChannel.getName(), channel.getName());
     }
 
@@ -189,8 +191,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @see #op(org.pircbotx.UserHostmask)
      */
     public void setMode(String mode) {
-        if (mode == null)
+        if (mode == null) {
             throw new IllegalArgumentException("Can't set mode on channel to null");
+        }
         bot.sendIRC().mode(channel.getName(), mode);
     }
 
@@ -207,10 +210,12 @@ public class OutputChannel implements GenericChannelUserOutput {
      * single space separating them
      */
     public void setMode(String mode, Object... args) {
-        if (mode == null)
+        if (mode == null) {
             throw new IllegalArgumentException("Can't set mode on channel to null");
-        if (args == null)
+        }
+        if (args == null) {
             throw new IllegalArgumentException("Can't set mode arguments to null");
+        }
         setMode(mode + " " + StringUtils.join(args, " "));
     }
 
@@ -223,10 +228,12 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @see #setMode(java.lang.String)
      */
     public void setMode(String mode, UserHostmask user) {
-        if (mode == null)
+        if (mode == null) {
             throw new IllegalArgumentException("Can't set user mode on channel to null");
-        if (user == null)
+        }
+        if (user == null) {
             throw new IllegalArgumentException("Can't set user mode on null user");
+        }
         setMode(mode + " " + user.getNick());
     }
 
@@ -255,8 +262,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param key The secret key to use
      */
     public void setChannelKey(String key) {
-        if (key == null)
+        if (key == null) {
             throw new IllegalArgumentException("Can't set channel key to null");
+        }
         setMode("+k", key);
     }
 
@@ -268,8 +276,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * asterisk might work
      */
     public void removeChannelKey(String key) {
-        if (key == null)
+        if (key == null) {
             throw new IllegalArgumentException("Can't remove channel key with null key");
+        }
         setMode("-k", key);
     }
 
@@ -378,8 +387,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param hostmask A hostmask representing the user we're banning.
      */
     public void ban(String hostmask) {
-        if (hostmask == null)
+        if (hostmask == null) {
             throw new IllegalArgumentException("Can't set ban on null hostmask");
+        }
         bot.sendRaw().rawLine("MODE " + channel.getName() + " +b " + hostmask);
     }
 
@@ -391,8 +401,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param hostmask A hostmask representing the user we're unbanning.
      */
     public void unBan(String hostmask) {
-        if (hostmask == null)
+        if (hostmask == null) {
             throw new IllegalArgumentException("Can't remove ban on null hostmask");
+        }
         bot.sendRaw().rawLine("MODE " + channel.getName() + " -b " + hostmask);
     }
 
@@ -403,8 +414,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user The user we are opping.
      */
     public void op(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't set op on null user");
+        }
         setMode("+o " + user.getNick());
     }
 
@@ -415,8 +427,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user The user we are deopping.
      */
     public void deOp(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't remove op on null user");
+        }
         setMode("-o " + user.getNick());
     }
 
@@ -427,8 +440,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user The user we are voicing.
      */
     public void voice(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't set voice on null user");
+        }
         setMode("+v " + user.getNick());
     }
 
@@ -439,8 +453,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user The user we are devoicing.
      */
     public void deVoice(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't remove voice on null user");
+        }
         setMode("-v " + user.getNick());
     }
 
@@ -454,8 +469,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user
      */
     public void halfOp(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't set halfop on null user");
+        }
         setMode("+h " + user.getNick());
     }
 
@@ -469,8 +485,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user
      */
     public void deHalfOp(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't remove halfop on null user");
+        }
         setMode("-h " + user.getNick());
     }
 
@@ -484,8 +501,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user
      */
     public void owner(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't set owner on null user");
+        }
         setMode("+q " + user.getNick());
     }
 
@@ -499,8 +517,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user
      */
     public void deOwner(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't remove owner on null user");
+        }
         setMode("-q " + user.getNick());
     }
 
@@ -514,8 +533,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user
      */
     public void superOp(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't set super op on null user");
+        }
         setMode("+a " + user.getNick());
     }
 
@@ -529,8 +549,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param user
      */
     public void deSuperOp(UserHostmask user) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't remove super op on null user");
+        }
         setMode("-a " + user.getNick());
     }
 
@@ -543,8 +564,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      *
      */
     public void setTopic(String topic) {
-        if (topic == null)
+        if (topic == null) {
             throw new IllegalArgumentException("Can't set topic to null");
+        }
         bot.sendRaw().rawLine("TOPIC " + channel.getName() + " :" + topic);
     }
 
@@ -567,8 +589,9 @@ public class OutputChannel implements GenericChannelUserOutput {
      * @param reason A description of the reason for kicking a user.
      */
     public void kick(UserHostmask user, String reason) {
-        if (user == null)
+        if (user == null) {
             throw new IllegalArgumentException("Can't kick null user");
+        }
         bot.sendRaw().rawLine("KICK " + channel.getName() + " " + user.getNick() + " :" + reason);
     }
 }

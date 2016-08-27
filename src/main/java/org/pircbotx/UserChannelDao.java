@@ -54,7 +54,7 @@ public class UserChannelDao<U extends User, C extends Channel> implements Closea
     protected final PircBotX bot;
     protected final Configuration.BotFactory botFactory;
     protected final Locale locale;
-    protected final Object accessLock = new Object();
+    protected final Object accessLock = new Object(); // Used by lombok
     protected final UserChannelMap<U, C> mainMap;
     protected final EnumMap<UserLevel, UserChannelMap<U, C>> levelsMap;
     protected final Map<String, U> userNickMap;

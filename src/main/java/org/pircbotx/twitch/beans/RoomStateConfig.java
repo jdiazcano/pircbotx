@@ -20,9 +20,9 @@ public class RoomStateConfig extends BaseConfig {
     public RoomStateConfig(String message, List<String> parsedLine, ImmutableMap<String, String> tags, String line) {
         super(message, parsedLine, line);
         this.language = tags.getOrDefault("broadcaster-lang", language);
-        this.r9k = tags.getOrDefault("r9k", "0").equals("1");
+        this.r9k = "1".equals(tags.getOrDefault("r9k", "0"));
         this.slow = Integer.parseInt(tags.getOrDefault("slow", "0"));
-        this.subsOnly = tags.getOrDefault("subs-only", "0").equals("1");
+        this.subsOnly = "1".equals(tags.getOrDefault("subs-only", "0"));
     }
 
     public String getLanguage() {

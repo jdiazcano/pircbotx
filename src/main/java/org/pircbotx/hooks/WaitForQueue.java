@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class WaitForQueue implements Closeable {
     protected final PircBotX bot;
-    protected LinkedBlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>();
+    protected LinkedBlockingQueue<Event> eventQueue = new LinkedBlockingQueue<>();
     protected WaitForQueueListener listener;
 
     /**
@@ -109,7 +109,7 @@ public class WaitForQueue implements Closeable {
 
     @SuppressWarnings("unchecked")
     public <E extends GenericEvent> E waitFor(@NonNull Class<E> eventClass, long timeout, @NonNull TimeUnit unit) throws InterruptedException {
-        List<Class<E>> eventList = new ArrayList<Class<E>>();
+        List<Class<E>> eventList = new ArrayList<>();
         eventList.add(eventClass);
         return (E) waitFor((List<Class<? extends E>>) (Object) eventList, timeout, unit);
     }
@@ -130,11 +130,14 @@ public class WaitForQueue implements Closeable {
         while (true) {
             Event curEvent = eventQueue.poll(timeout, unit);
             //When poll times out it returns null. Repeat that behavior here
-            if (curEvent == null)
+            if (curEvent == null) {
                 return null;
-            for (Class<? extends GenericEvent> curEventClass : eventClasses)
-                if (curEventClass.isInstance(curEvent))
+            }
+            for (Class<? extends GenericEvent> curEventClass : eventClasses) {
+                if (curEventClass.isInstance(curEvent)) {
                     return curEvent;
+                }
+            }
         }
     }
 

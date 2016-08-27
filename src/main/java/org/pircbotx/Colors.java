@@ -260,8 +260,9 @@ public final class Colors {
                         i++;
                         if (i < length) {
                             ch = line.charAt(i);
-                            if (Character.isDigit(ch))
+                            if (Character.isDigit(ch)) {
                                 i++;
+                            }
                         }
                         // Now skip ",x" or ",xy" (background color).
                         if (i < length) {
@@ -274,22 +275,27 @@ public final class Colors {
                                         i++;
                                         if (i < length) {
                                             ch = line.charAt(i);
-                                            if (Character.isDigit(ch))
+                                            if (Character.isDigit(ch)) {
                                                 i++;
+                                            }
                                         }
                                     } else
                                         // Keep the comma.
+                                    {
                                         i--;
+                                    }
                                 } else
                                     // Keep the comma.
+                                {
                                     i--;
+                                }
                             }
                         }
                     }
                 }
-            } else if (ch == '\u000f')
+            } else if (ch == '\u000f') {
                 i++;
-            else {
+            } else {
                 buffer.append(ch);
                 i++;
             }
@@ -312,8 +318,9 @@ public final class Colors {
         for (int i = 0; i < length; i++) {
             char ch = line.charAt(i);
             //Filter characters
-            if (ch != '\u000f' && ch != '\u0002' && ch != '\u001f' && ch != '\u0016')
+            if (ch != '\u000f' && ch != '\u0002' && ch != '\u001f' && ch != '\u0016') {
                 buffer.append(ch);
+            }
         }
         return buffer.toString();
     }

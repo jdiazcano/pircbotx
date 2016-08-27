@@ -59,7 +59,9 @@ public class ReceiveFileTransfer extends FileTransfer {
             int bytesRead = socketInput.read(inBuffer, 0, bufferSize);
             if (bytesRead == -1)
                 //Done
+            {
                 break;
+            }
 
             //Write to file
             fileOutput.write(inBuffer, 0, bytesRead);
@@ -76,7 +78,9 @@ public class ReceiveFileTransfer extends FileTransfer {
 
             if (remainingBytes - bufferSize == 0)
                 //Were done
+            {
                 break;
+            }
         }
     }
 }

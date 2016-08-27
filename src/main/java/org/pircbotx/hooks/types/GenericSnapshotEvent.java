@@ -32,5 +32,5 @@ public interface GenericSnapshotEvent {
      * @see org.pircbotx.Configuration.Builder#setSnapshotsEnabled(boolean)
      */
     @Nullable
-    public UserChannelDaoSnapshot getUserChannelDaoSnapshot();
+    UserChannelDaoSnapshot getUserChannelDaoSnapshot();
 }

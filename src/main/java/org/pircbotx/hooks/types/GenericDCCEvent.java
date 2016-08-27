@@ -27,11 +27,11 @@ import java.net.InetAddress;
  * @author Leon Blakey
  */
 public interface GenericDCCEvent extends GenericUserEvent {
-    public boolean isPassive();
+    boolean isPassive();
 
-    public InetAddress getAddress();
+    InetAddress getAddress();
 
-    public int getPort();
+    int getPort();
 
-    public String getToken();
+    String getToken();
 }

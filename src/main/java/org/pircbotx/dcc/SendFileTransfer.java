@@ -46,8 +46,9 @@ public class SendFileTransfer extends FileTransfer {
         // Check for resuming.
         if (startPosition > 0) {
             long bytesSkipped = 0;
-            while (bytesSkipped < startPosition)
+            while (bytesSkipped < startPosition) {
                 bytesSkipped += fileInput.skip(startPosition - bytesSkipped);
+            }
         }
 
         byte[] outBuffer = new byte[configuration.getDccTransferBufferSize()];

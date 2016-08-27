@@ -110,7 +110,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
      * Enabled CAP features
      */
     @Getter
-    protected List<String> enabledCapabilities = new ArrayList<String>();
+    protected List<String> enabledCapabilities = new ArrayList<>();
     protected String nick;
     protected boolean loggedIn = false;
     protected Thread shutdownHook;
@@ -181,24 +181,28 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
                 log.error("Exception encountered during connect", e);
                 connectExceptions.put(new InetSocketAddress(serverHostname, serverPort), e);
 
-                if (!configuration.isAutoReconnect())
+                if (!configuration.isAutoReconnect()) {
                     throw new RuntimeException("Exception encountered during connect", e);
+                }
             } finally {
-                if (!connectExceptions.isEmpty())
+                if (!connectExceptions.isEmpty()) {
                     Utils.dispatchEvent(this, new ConnectAttemptFailedEvent(this,
                             configuration.getAutoReconnectAttempts() - connectAttempts,
                             ImmutableMap.copyOf(connectExceptions)));
+                }
 
                 //Cleanup if not already called
                 synchronized (stateLock) {
-                    if (state != State.DISCONNECTED)
+                    if (state != State.DISCONNECTED) {
                         shutdown();
+                    }
                 }
             }
 
             //No longer connected to the server
-            if (!configuration.isAutoReconnect())
+            if (!configuration.isAutoReconnect()) {
                 return;
+            }
             if (reconnectStopped) {
                 log.debug("stopBotReconnect() called, exiting reconnect loop");
                 return;
@@ -208,13 +212,14 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
             }
 
             //Optionally pause between attempts, useful if network is temporarily down
-            if (configuration.getAutoReconnectDelay() > 0)
+            if (configuration.getAutoReconnectDelay() > 0) {
                 try {
                     log.debug("Pausing for {} milliseconds before connecting again", configuration.getAutoReconnectDelay());
                     Thread.sleep(configuration.getAutoReconnectDelay());
                 } catch (InterruptedException e) {
                     throw new RuntimeException("Interrupted while pausing before the next connect attempt", e);
                 }
+            }
         } while (connectAttempts < configuration.getAutoReconnectAttempts());
     }
 
@@ -237,12 +242,15 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
         synchronized (stateLock) {
             //Server id
             Utils.addBotToMDC(this);
-            if (isConnected())
+            if (isConnected()) {
                 throw new IrcException(IrcException.Reason.AlreadyConnected, "Must disconnect from server before connecting again");
-            if (getState() == State.CONNECTED)
+            }
+            if (getState() == State.CONNECTED) {
                 throw new RuntimeException("Bot is not connected but state is State.CONNECTED. This shouldn't happen");
-            if (configuration.isIdentServerEnabled() && IdentServer.getServer() == null)
+            }
+            if (configuration.isIdentServerEnabled() && IdentServer.getServer() == null) {
                 throw new RuntimeException("UseIdentServer is enabled but no IdentServer has been started");
+            }
 
             //Reset capabilities
             enabledCapabilities = new ArrayList<>();
@@ -307,21 +315,26 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
 
         configuration.getListenerManager().onEvent(new SocketConnectEvent(this));
 
-        if (configuration.isIdentServerEnabled())
+        if (configuration.isIdentServerEnabled()) {
             IdentServer.getServer().addIdentEntry(socket.getInetAddress(), socket.getPort(), socket.getLocalPort(), configuration.getLogin());
+        }
 
         if (configuration.isCapEnabled())
             // Attempt to initiate a CAP transaction.
+        {
             sendCAP().getSupported();
+        }
 
         // Attempt to join the server.
-        if (configuration.isWebIrcEnabled())
+        if (configuration.isWebIrcEnabled()) {
             sendRaw().rawLineNow("WEBIRC " + configuration.getWebIrcPassword()
                     + " " + configuration.getWebIrcUsername()
                     + " " + configuration.getWebIrcHostname()
                     + " " + configuration.getWebIrcAddress().getHostAddress());
-        if (StringUtils.isNotBlank(configuration.getServerPassword()))
+        }
+        if (StringUtils.isNotBlank(configuration.getServerPassword())) {
             sendRaw().rawLineNow("PASS " + configuration.getServerPassword());
+        }
 
         sendRaw().rawLineNow("NICK " + configuration.getName());
         sendRaw().rawLineNow("USER " + configuration.getLogin() + " 8 * :" + configuration.getRealName());
@@ -387,8 +400,9 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
         }
 
         //End the loop if the line is null
-        if (line == null)
+        if (line == null) {
             return false;
+        }
 
         //Start acting the line
         try {
@@ -417,8 +431,9 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
      * @throws java.io.IOException
      */
     protected void sendRawLineToServer(String line) throws IOException {
-        if (line.length() > configuration.getMaxLineLength() - 2)
+        if (line.length() > configuration.getMaxLineLength() - 2) {
             line = line.substring(0, configuration.getMaxLineLength() - 2);
+        }
         outputWriter.write(line + "\r\n");
         outputWriter.flush();
 
@@ -433,8 +448,9 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
         //Were probably connected to the server at this point
         this.connectAttempts = 0;
 
-        if (configuration.isShutdownHookEnabled())
-            Runtime.getRuntime().addShutdownHook(shutdownHook = new PircBotX.BotShutdownHook(this));
+        if (configuration.isShutdownHookEnabled()) {
+            Runtime.getRuntime().addShutdownHook(shutdownHook = new BotShutdownHook(this));
+        }
     }
 
     public OutputRaw sendRaw() {
@@ -580,20 +596,23 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
         UserChannelDaoSnapshot daoSnapshot;
         synchronized (stateLock) {
             log.debug("---PircBotX shutdown started---");
-            if (state == State.DISCONNECTED)
+            if (state == State.DISCONNECTED) {
                 throw new RuntimeException("Cannot call shutdown twice");
+            }
             state = State.DISCONNECTED;
 
-            if (configuration.isIdentServerEnabled())
+            if (configuration.isIdentServerEnabled()) {
                 IdentServer.getServer().removeIdentEntry(socket.getInetAddress(), socket.getPort(), socket.getLocalPort(), configuration.getLogin());
+            }
 
             //Close the socket from here and let the threads die
-            if (socket != null && !socket.isClosed())
+            if (socket != null && !socket.isClosed()) {
                 try {
                     socket.close();
                 } catch (Exception e) {
                     log.error("Cannot close socket", e);
                 }
+            }
 
             //Cache channels for possible next reconnect
             ImmutableMap.Builder<String, String> reconnectChannelsBuilder = ImmutableMap.builder();
@@ -654,8 +673,9 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
                 thisBot.stopBotReconnect();
                 thisBot.sendIRC().quitServer();
                 try {
-                    if (thisBot.isConnected())
+                    if (thisBot.isConnected()) {
                         thisBot.socket.close();
+                    }
                 } catch (IOException ex) {
                     log.debug("Unabloe to forcibly close socket", ex);
                 }

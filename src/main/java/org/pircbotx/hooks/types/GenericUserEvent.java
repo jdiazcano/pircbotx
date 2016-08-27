@@ -30,7 +30,7 @@ public interface GenericUserEvent extends GenericEvent {
      *
      * @return The hostmask of the user
      */
-    public UserHostmask getUserHostmask();
+    UserHostmask getUserHostmask();
 
     /**
      * The source user that generated the event.
@@ -38,5 +38,5 @@ public interface GenericUserEvent extends GenericEvent {
      * @return The user or null if the hostmask didn't match a user at creation
      * time
      */
-    public User getUser();
+    User getUser();
 }

@@ -33,14 +33,14 @@ public interface ListenerManager {
      *
      * @param event The event to send
      */
-    public void onEvent(Event event);
+    void onEvent(Event event);
 
     /**
      * Add a listener to this ListenerManager
      *
      * @param listener The listener to add
      */
-    public void addListener(Listener listener);
+    void addListener(Listener listener);
 
     /**
      * Remove a listener from this ListenerManager
@@ -48,7 +48,7 @@ public interface ListenerManager {
      * @param listener The listener to remove
      * @return True if the listener was removed, false if it didn't exist
      */
-    public boolean removeListener(Listener listener);
+    boolean removeListener(Listener listener);
 
     /**
      * Check if a listener is in this ListenerManager
@@ -56,7 +56,7 @@ public interface ListenerManager {
      * @param listener The listener <i>instance</i> to look for
      * @return True if it the listener exists, false if it doesn't
      */
-    public boolean listenerExists(Listener listener);
+    boolean listenerExists(Listener listener);
 
     /**
      * Gets all listeners that are in this ListenerManager
@@ -64,7 +64,7 @@ public interface ListenerManager {
      * @return An <b>immutable</b> set of all listeners that are in this
      * ListenerManager
      */
-    public ImmutableSet<Listener> getListeners();
+    ImmutableSet<Listener> getListeners();
 
-    public void shutdown(PircBotX bot);
+    void shutdown(PircBotX bot);
 }

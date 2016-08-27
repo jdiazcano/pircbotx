@@ -3,7 +3,7 @@ package org.pircbotx.twitch;
 import com.google.common.collect.ImmutableMap;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
-import org.pircbotx.User;
+import org.pircbotx.UserHostmask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +25,7 @@ public class DynamicCommandHandler {
         return this;
     }
 
-    public boolean handle(PircBotX bot, String command, User sourceUser, Channel sourceChannel, String target, String message, List<String> parsedLine, ImmutableMap<String, String> tags, String line) {
+    public boolean handle(PircBotX bot, String command, UserHostmask sourceUser, Channel sourceChannel, String target, String message, List<String> parsedLine, ImmutableMap<String, String> tags, String line) {
         Command comm = commands.get(command);
         if (comm != null) {
             return comm.handle(bot, command, sourceUser, sourceChannel, target, comm.build(message, parsedLine, tags, line));

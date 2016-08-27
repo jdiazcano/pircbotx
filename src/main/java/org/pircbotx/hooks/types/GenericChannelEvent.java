@@ -29,5 +29,5 @@ public interface GenericChannelEvent extends GenericEvent {
      *
      * @return A channel or null if no channel was involved
      */
-    public Channel getChannel();
+    Channel getChannel();
 }

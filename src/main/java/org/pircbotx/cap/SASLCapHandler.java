@@ -63,7 +63,7 @@ public class SASLCapHandler extends EnableCapHandler {
 
     @Override
     public boolean handleUnknown(PircBotX bot, String rawLine) throws CAPException {
-        if (rawLine.equals("AUTHENTICATE +")) {
+        if ("AUTHENTICATE +".equals(rawLine)) {
             //Server ackowledges our request to use plain authentication
             byte[] rawAuth = (username + '\0' + username + '\0' + password).getBytes(Charsets.UTF_8);
             //Issue #256: Use method available in commons-codec 1.3 for android, copied from encodeBase64String(byte[])
@@ -73,19 +73,23 @@ public class SASLCapHandler extends EnableCapHandler {
 
         //Check for 904 and 905
         String[] parsedLine = rawLine.split(" ", 4);
-        if (parsedLine.length >= 1)
+        if (parsedLine.length >= 1) {
             if (parsedLine[1].equals("904") || parsedLine[1].equals("905")) {
                 //Remove sasl as an enabled capability
                 bot.getEnabledCapabilities().remove("sasl");
 
-                if (!ignoreFail)
+                if (!ignoreFail) {
                     throw new CAPException(CAPException.Reason.SASLFailed, "SASL Authentication failed with message: " + parsedLine[3].substring(1));
+                }
 
                 //Pretend like nothing happened
                 return true;
             } else if (parsedLine[1].equals("900") || parsedLine[1].equals("903"))
-                //Success!
+            //Success!
+            {
                 return true;
+            }
+        }
         return false;
     }
 }

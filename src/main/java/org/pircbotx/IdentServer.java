@@ -58,7 +58,7 @@ public class IdentServer implements Closeable, Runnable {
     protected final InetAddress localAddress;
     protected final Charset encoding;
     protected final ServerSocket serverSocket;
-    protected final List<IdentEntry> identEntries = new ArrayList<IdentEntry>();
+    protected final List<IdentEntry> identEntries = new ArrayList<>();
     protected Thread runningThread;
     protected int port;
 
@@ -83,8 +83,9 @@ public class IdentServer implements Closeable, Runnable {
 
     @Synchronized("INSTANCE_CREATE_LOCK")
     protected static void startServer(Charset encoding, InetAddress localAddress, int port) {
-        if (server != null)
+        if (server != null) {
             throw new RuntimeException("Already created an IdentServer instance");
+        }
         server = new IdentServer(encoding, localAddress, port);
         server.start();
     }
@@ -96,8 +97,9 @@ public class IdentServer implements Closeable, Runnable {
      */
     @Synchronized("INSTANCE_CREATE_LOCK")
     public static void stopServer() throws IOException {
-        if (server == null)
+        if (server == null) {
             throw new RuntimeException("Never created an IdentServer");
+        }
         server.doClose();
         server = null;
     }
@@ -154,12 +156,15 @@ public class IdentServer implements Closeable, Runnable {
                     return;
                 } else
                     //This is not from the server socket closing
+                {
                     throw new RuntimeException("Exception encountered when opening user socket", e);
+                }
             } finally {
                 //Close user socket
                 try {
-                    if (socket != null)
+                    if (socket != null) {
                         socket.close();
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException("Exception encountered when closing user socket", e);
                 }
@@ -167,12 +172,13 @@ public class IdentServer implements Closeable, Runnable {
         }
 
         //Done with connection loop, can safely close the socket now
-        if (!serverSocket.isClosed())
+        if (!serverSocket.isClosed()) {
             try {
                 close();
             } catch (IOException e) {
                 log.error("Cannot close IdentServer socket", e);
             }
+        }
     }
 
     /**
@@ -202,13 +208,14 @@ public class IdentServer implements Closeable, Runnable {
         log.debug("Received ident request from " + remoteAddress + ": " + line);
         IdentEntry identEntry = null;
         synchronized (identEntries) {
-            for (IdentEntry curIdentEntry : identEntries)
+            for (IdentEntry curIdentEntry : identEntries) {
                 if (curIdentEntry.getRemoteAddress().equals(remoteAddress.getAddress())
                         && curIdentEntry.getRemotePort() == remotePort
                         && curIdentEntry.getLocalPort() == localPort) {
                     identEntry = curIdentEntry;
                     break;
                 }
+            }
         }
         if (identEntry == null) {
             String response = localPort + ", " + remotePort + " : ERROR : NO-USER";
@@ -235,8 +242,9 @@ public class IdentServer implements Closeable, Runnable {
             for (Iterator<IdentEntry> itr = identEntries.iterator(); itr.hasNext(); ) {
                 IdentEntry curEntry = itr.next();
                 if (curEntry.getRemoteAddress().equals(remoteAddress) && curEntry.getRemotePort() == remotePort
-                        && curEntry.getLocalPort() == localPort && curEntry.getLogin().equals(login))
+                        && curEntry.getLocalPort() == localPort && curEntry.getLogin().equals(login)) {
                     itr.remove();
+                }
             }
         }
     }

@@ -41,144 +41,156 @@ public abstract class ListenerAdapter implements Listener {
         //Also polymorphism, while theoretically correct, just means that this code
         //would be in every single Event and make an explicit dependency on this.
         //This is just simple and fast
-        if (event instanceof ActionEvent)
+        if (event instanceof ActionEvent) {
             onAction((ActionEvent) event);
-        else if (event instanceof BanListEvent)
+        } else if (event instanceof BanListEvent) {
             onBanList((BanListEvent) event);
-        else if (event instanceof ChannelInfoEvent)
+        } else if (event instanceof ChannelInfoEvent) {
             onChannelInfo((ChannelInfoEvent) event);
-        else if (event instanceof ConnectEvent)
+        } else if (event instanceof ConnectEvent) {
             onConnect((ConnectEvent) event);
-        else if (event instanceof ConnectAttemptFailedEvent)
+        } else if (event instanceof ConnectAttemptFailedEvent) {
             onConnectAttemptFailed((ConnectAttemptFailedEvent) event);
-        else if (event instanceof DisconnectEvent)
+        } else if (event instanceof DisconnectEvent) {
             onDisconnect((DisconnectEvent) event);
-        else if (event instanceof FingerEvent)
+        } else if (event instanceof FingerEvent) {
             onFinger((FingerEvent) event);
-        else if (event instanceof HalfOpEvent)
+        } else if (event instanceof HalfOpEvent) {
             onHalfOp((HalfOpEvent) event);
-        else if (event instanceof IncomingChatRequestEvent)
+        } else if (event instanceof IncomingChatRequestEvent) {
             onIncomingChatRequest((IncomingChatRequestEvent) event);
-        else if (event instanceof IncomingFileTransferEvent)
+        } else if (event instanceof IncomingFileTransferEvent) {
             onIncomingFileTransfer((IncomingFileTransferEvent) event);
-        else if (event instanceof InviteEvent)
+        } else if (event instanceof InviteEvent) {
             onInvite((InviteEvent) event);
-        else if (event instanceof JoinEvent)
+        } else if (event instanceof JoinEvent) {
             onJoin((JoinEvent) event);
-        else if (event instanceof KickEvent)
+        } else if (event instanceof KickEvent) {
             onKick((KickEvent) event);
-        else if (event instanceof MessageEvent)
+        } else if (event instanceof MessageEvent) {
             onMessage((MessageEvent) event);
-        else if (event instanceof ModeEvent)
+        } else if (event instanceof ModeEvent) {
             onMode((ModeEvent) event);
-        else if (event instanceof MotdEvent)
+        } else if (event instanceof MotdEvent) {
             onMotd((MotdEvent) event);
-        else if (event instanceof NickAlreadyInUseEvent)
+        } else if (event instanceof NickAlreadyInUseEvent) {
             onNickAlreadyInUse((NickAlreadyInUseEvent) event);
-        else if (event instanceof NickChangeEvent)
+        } else if (event instanceof NickChangeEvent) {
             onNickChange((NickChangeEvent) event);
-        else if (event instanceof NoticeEvent)
+        } else if (event instanceof NoticeEvent) {
             onNotice((NoticeEvent) event);
-        else if (event instanceof OpEvent)
+        } else if (event instanceof OpEvent) {
             onOp((OpEvent) event);
-        else if (event instanceof OutputEvent)
+        } else if (event instanceof OutputEvent) {
             onOutput((OutputEvent) event);
-        else if (event instanceof OwnerEvent)
+        } else if (event instanceof OwnerEvent) {
             onOwner((OwnerEvent) event);
-        else if (event instanceof PartEvent)
+        } else if (event instanceof PartEvent) {
             onPart((PartEvent) event);
-        else if (event instanceof PingEvent)
+        } else if (event instanceof PingEvent) {
             onPing((PingEvent) event);
-        else if (event instanceof PrivateMessageEvent)
+        } else if (event instanceof PrivateMessageEvent) {
             onPrivateMessage((PrivateMessageEvent) event);
-        else if (event instanceof QuitEvent)
+        } else if (event instanceof QuitEvent) {
             onQuit((QuitEvent) event);
-        else if (event instanceof RemoveChannelBanEvent)
+        } else if (event instanceof RemoveChannelBanEvent) {
             onRemoveChannelBan((RemoveChannelBanEvent) event);
-        else if (event instanceof RemoveChannelKeyEvent)
+        } else if (event instanceof RemoveChannelKeyEvent) {
             onRemoveChannelKey((RemoveChannelKeyEvent) event);
-        else if (event instanceof RemoveChannelLimitEvent)
+        } else if (event instanceof RemoveChannelLimitEvent) {
             onRemoveChannelLimit((RemoveChannelLimitEvent) event);
-        else if (event instanceof RemoveInviteOnlyEvent)
+        } else if (event instanceof RemoveInviteOnlyEvent) {
             onRemoveInviteOnly((RemoveInviteOnlyEvent) event);
-        else if (event instanceof RemoveModeratedEvent)
+        } else if (event instanceof RemoveModeratedEvent) {
             onRemoveModerated((RemoveModeratedEvent) event);
-        else if (event instanceof RemoveNoExternalMessagesEvent)
+        } else if (event instanceof RemoveNoExternalMessagesEvent) {
             onRemoveNoExternalMessages((RemoveNoExternalMessagesEvent) event);
-        else if (event instanceof RemovePrivateEvent)
+        } else if (event instanceof RemovePrivateEvent) {
             onRemovePrivate((RemovePrivateEvent) event);
-        else if (event instanceof RemoveSecretEvent)
+        } else if (event instanceof RemoveSecretEvent) {
             onRemoveSecret((RemoveSecretEvent) event);
-        else if (event instanceof RemoveTopicProtectionEvent)
+        } else if (event instanceof RemoveTopicProtectionEvent) {
             onRemoveTopicProtection((RemoveTopicProtectionEvent) event);
-        else if (event instanceof ServerPingEvent)
+        } else if (event instanceof ServerPingEvent) {
             onServerPing((ServerPingEvent) event);
-        else if (event instanceof ServerResponseEvent)
+        } else if (event instanceof ServerResponseEvent) {
             onServerResponse((ServerResponseEvent) event);
-        else if (event instanceof SetChannelBanEvent)
+        } else if (event instanceof SetChannelBanEvent) {
             onSetChannelBan((SetChannelBanEvent) event);
-        else if (event instanceof SetChannelKeyEvent)
+        } else if (event instanceof SetChannelKeyEvent) {
             onSetChannelKey((SetChannelKeyEvent) event);
-        else if (event instanceof SetChannelLimitEvent)
+        } else if (event instanceof SetChannelLimitEvent) {
             onSetChannelLimit((SetChannelLimitEvent) event);
-        else if (event instanceof SetInviteOnlyEvent)
+        } else if (event instanceof SetInviteOnlyEvent) {
             onSetInviteOnly((SetInviteOnlyEvent) event);
-        else if (event instanceof SetModeratedEvent)
+        } else if (event instanceof SetModeratedEvent) {
             onSetModerated((SetModeratedEvent) event);
-        else if (event instanceof SetNoExternalMessagesEvent)
+        } else if (event instanceof SetNoExternalMessagesEvent) {
             onSetNoExternalMessages((SetNoExternalMessagesEvent) event);
-        else if (event instanceof SetPrivateEvent)
+        } else if (event instanceof SetPrivateEvent) {
             onSetPrivate((SetPrivateEvent) event);
-        else if (event instanceof SetSecretEvent)
+        } else if (event instanceof SetSecretEvent) {
             onSetSecret((SetSecretEvent) event);
-        else if (event instanceof SetTopicProtectionEvent)
+        } else if (event instanceof SetTopicProtectionEvent) {
             onSetTopicProtection((SetTopicProtectionEvent) event);
-        else if (event instanceof SocketConnectEvent)
+        } else if (event instanceof SocketConnectEvent) {
             onSocketConnect((SocketConnectEvent) event);
-        else if (event instanceof SuperOpEvent)
+        } else if (event instanceof SuperOpEvent) {
             onSuperOp((SuperOpEvent) event);
-        else if (event instanceof TimeEvent)
+        } else if (event instanceof TimeEvent) {
             onTime((TimeEvent) event);
-        else if (event instanceof TopicEvent)
+        } else if (event instanceof TopicEvent) {
             onTopic((TopicEvent) event);
-        else if (event instanceof UnknownEvent)
+        } else if (event instanceof UnknownEvent) {
             onUnknown((UnknownEvent) event);
-        else if (event instanceof UserListEvent)
+        } else if (event instanceof UserListEvent) {
             onUserList((UserListEvent) event);
-        else if (event instanceof UserModeEvent)
+        } else if (event instanceof UserModeEvent) {
             onUserMode((UserModeEvent) event);
-        else if (event instanceof VersionEvent)
+        } else if (event instanceof VersionEvent) {
             onVersion((VersionEvent) event);
-        else if (event instanceof VoiceEvent)
+        } else if (event instanceof VoiceEvent) {
             onVoice((VoiceEvent) event);
-        else if (event instanceof WhoisEvent)
+        } else if (event instanceof WhoisEvent) {
             onWhois((WhoisEvent) event);
+        }
 
         //Exception methods
-        if (event instanceof ExceptionEvent)
+        if (event instanceof ExceptionEvent) {
             onException((ExceptionEvent) event);
-        if (event instanceof ListenerExceptionEvent)
+        }
+        if (event instanceof ListenerExceptionEvent) {
             onListenerException((ListenerExceptionEvent) event);
+        }
 
         //Generic methods
-        if (event instanceof GenericCTCPEvent)
+        if (event instanceof GenericCTCPEvent) {
             onGenericCTCP((GenericCTCPEvent) event);
-        if (event instanceof GenericUserModeEvent)
+        }
+        if (event instanceof GenericUserModeEvent) {
             onGenericUserMode((GenericUserModeEvent) event);
-        if (event instanceof GenericChannelModeEvent)
+        }
+        if (event instanceof GenericChannelModeEvent) {
             onGenericChannelMode((GenericChannelModeEvent) event);
-        if (event instanceof GenericChannelModeRecipientEvent)
+        }
+        if (event instanceof GenericChannelModeRecipientEvent) {
             onGenericChannelModeRecipient((GenericChannelModeRecipientEvent) event);
-        if (event instanceof GenericDCCEvent)
+        }
+        if (event instanceof GenericDCCEvent) {
             onGenericDCC((GenericDCCEvent) event);
-        if (event instanceof GenericMessageEvent)
+        }
+        if (event instanceof GenericMessageEvent) {
             onGenericMessage((GenericMessageEvent) event);
-        if (event instanceof GenericUserEvent)
+        }
+        if (event instanceof GenericUserEvent) {
             onGenericUser((GenericUserEvent) event);
-        if (event instanceof GenericChannelEvent)
+        }
+        if (event instanceof GenericChannelEvent) {
             onGenericChannel((GenericChannelEvent) event);
-        if (event instanceof GenericChannelUserEvent)
+        }
+        if (event instanceof GenericChannelUserEvent) {
             onGenericChannelUser((GenericChannelUserEvent) event);
+        }
     }
 
     public void onAction(ActionEvent event) throws Exception {
