@@ -49,6 +49,11 @@ public class OutputIRC {
         bot.sendRaw().rawLine("JOIN " + channel);
     }
 
+    public void partChannel(String channel) {
+        checkArgument(StringUtils.isNotBlank(channel), "Channel '%s' is blank", channel);
+        bot.sendRaw().rawLine("PART " + channel);
+    }
+
     /**
      * Joins a channel with a key.
      *

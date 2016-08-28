@@ -1,5 +1,6 @@
 package org.pircbotx.twitch.beans;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,6 +11,7 @@ public class BaseConfig {
     private String rawLine;
     private String message;
     private List<String> parsedLine;
+    private Date date = new Date();
 
     public BaseConfig(String message, List<String> parsedLine, String line) {
         this.rawLine = line;
@@ -27,5 +29,9 @@ public class BaseConfig {
 
     public List<String> getParsedLine() {
         return parsedLine;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }
