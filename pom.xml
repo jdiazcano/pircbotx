@@ -81,7 +81,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lombok.version>1.16.6</lombok.version>
 		<guava.version>19.0</guava.version>
-		<src.dir>src/main/java</src.dir>
+		<src.dir>src/com.treecat.kappa.main/java</src.dir>
 		<snapshot.version />
 	</properties>
 
@@ -236,7 +236,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<file>src/main/java/org/pircbotx/PircBotX.java</file>
+					<file>src/com.treecat.kappa.main/java/org/pircbotx/PircBotX.java</file>
 					<replacements>
 						<replacement>
 							<token>public static final String VERSION .+</token>
@@ -410,7 +410,7 @@
 						</executions>
 						<configuration>
 							<addOutputDirectory>false</addOutputDirectory>
-							<sourceDirectory>src/main/java</sourceDirectory>
+							<sourceDirectory>src/com.treecat.kappa.main/java</sourceDirectory>
 							<!-- Netbeans assumes all errors go to generated sources, which is wrong for lombok-->
 							<outputDirectory>target/delombok</outputDirectory>
 						</configuration>

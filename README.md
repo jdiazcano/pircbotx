@@ -38,7 +38,7 @@ public class MyListener extends ListenerAdapter {
                         event.respond("Hello world!");
         }
 
-        public static void main(String[] args) throws Exception {
+        public static void com.treecat.kappa.main(String[] args) throws Exception {
                 //Configure what we want our bot to do
                 Configuration configuration = new Configuration.Builder()
                                 .setName("PircBotXUser") //Set the nick of the bot. CHANGE IN YOUR CODE

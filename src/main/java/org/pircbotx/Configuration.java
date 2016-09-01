@@ -18,7 +18,6 @@
 package org.pircbotx;
 
 import com.google.common.collect.*;
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.ToString;
@@ -942,7 +941,7 @@ public class Configuration {
                     .buildConfiguration();
         }
 
-        @NotNull
+        @NonNull
         public Configuration.Builder addTwitchSupport() {
             addListener(new ListenerAdapter() {
                 @Override

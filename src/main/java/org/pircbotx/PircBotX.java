@@ -319,9 +319,7 @@ public class PircBotX implements Comparable<PircBotX>, Closeable {
             IdentServer.getServer().addIdentEntry(socket.getInetAddress(), socket.getPort(), socket.getLocalPort(), configuration.getLogin());
         }
 
-        if (configuration.isCapEnabled())
-            // Attempt to initiate a CAP transaction.
-        {
+        if (configuration.isCapEnabled()) {
             sendCAP().getSupported();
         }
 
