@@ -17,8 +17,9 @@ public class TwitchEmote {
         this.id = id;
     }
 
-    public void addLocation(TwitchEmoteLocation location) {
+    public TwitchEmote addLocation(TwitchEmoteLocation location) {
         locations.add(location);
+        return this;
     }
 
     public long getId() {
